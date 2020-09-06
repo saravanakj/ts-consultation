@@ -1,4 +1,4 @@
-import {Error} from "./Error"
+// import {Error} from "./Error"
 export const  Client ={
     ApiCall,
     post
@@ -16,7 +16,7 @@ function post(payload){
             "Content-Type": "application/json",
             "Access-Control-Allow-Headers": "*", 
         },
-        credentials:"include",
+      
         body:JSON.stringify(payload)
     }
 

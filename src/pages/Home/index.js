@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from "react-redux"
 import {withRouter} from "react-router-dom";
 import {search} from "../../api_helper/slice/homeSlice";
+import "../../App.css"
 
 
 class Home extends Component{

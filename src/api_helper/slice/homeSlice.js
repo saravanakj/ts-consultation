@@ -117,40 +117,40 @@ export function majorDasha(payload){
     }
 }
 
-export function subDasha(payload){
+export function subDasha(payload,query){
     return dispatch => {
         dispatch(subDashaRequest());
-        homeApi.subDasha(payload).then(
+        homeApi.subDasha(payload,query).then(
             data => {dispatch(subDashaSuccess(data))},
             error => {dispatch(subDashaFailure(error))}
         )
     }
 }
 
-export function subDasha2(payload){
+export function subDasha2(payload,query,query2){
     return dispatch => {
         dispatch(subDasha2Request());
-        homeApi.subDasha2(payload).then(
+        homeApi.subDasha2(payload,query,query2).then(
             data => {dispatch(subDasha2Success(data))},
             error => {dispatch(subDasha2Failure(error))}
         )
     }
 }
 
-export function subDasha3(payload){
+export function subDasha3(payload,query,query2,query3){
     return dispatch => {
         dispatch(subDasha3Request());
-        homeApi.subDasha3(payload).then(
+        homeApi.subDasha3(payload,query,query2,query3).then(
             data => {dispatch(subDasha3Success(data))},
             error => {dispatch(subDasha3Failure(error))}
         )
     }
 }
 
-export function subDasha4(payload){
+export function subDasha4(payload,query,query2,query3,query4){
     return dispatch => {
         dispatch(subDasha4Request());
-        homeApi.subDasha4(payload).then(
+        homeApi.subDasha4(payload,query,query2,query3,query4).then(
             data => {dispatch(subDasha4Success(data))},
             error => {dispatch(subDasha4Failure(error))}
         )
