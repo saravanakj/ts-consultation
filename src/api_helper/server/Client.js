@@ -13,8 +13,7 @@ function post(payload){
         headers:{
             Accept: "application/json",
             Authorization: `Basic ${base64string}`,
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Headers": "*", 
+            "Content-Type": "application/json", 
         },
       
         body:JSON.stringify(payload)
