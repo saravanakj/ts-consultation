@@ -3,7 +3,7 @@ import {connect} from "react-redux"
 import {withRouter} from "react-router-dom";
 import {search} from "../../api_helper/slice/homeSlice";
 import "../../App.css"
-
+import * as mock from '../../mock_data/local';
 
 class Home extends Component{
   constructor(props){
@@ -26,11 +26,11 @@ class Home extends Component{
        "tzone":5.5,
         "ayanamsha":"KP"
     }
-    dispatch(search(payload));
-    // let houseChart=Data.houses;
-    // let PlanetChart=Data.planets;
-    // let chart=houseChart.concat(PlanetChart).sort((a,b) =>a.norm_degree - b.norm_degree);
-    // this.setState({data:chart})
+    //dispatch(search(payload));
+    let houseChart=mock.Data.houses;
+    let PlanetChart=mock.Data.planets;
+    let chart=houseChart.concat(PlanetChart).sort((a,b) =>a.norm_degree - b.norm_degree);
+    this.setState({data:chart})
   }
   render(){
      const {data}=this.state;
@@ -47,7 +47,7 @@ class Home extends Component{
         <input type="number"className="pt_input" placeholder="TimeZone"/>
          <button className="pt_button">Search</button>
     </div>
-    {/* <div className="pt_table">
+    <div className="pt_table">
     <table className="table">
       <thead>
         <tr>
@@ -61,7 +61,7 @@ class Home extends Component{
           <td>Normal Degree</td>
           <td>Sub lord</td>
           <td>Sub Sub Lord</td>
-          <td>Sub Sub Lord</td>
+          <td>Sub Sub Sub Lord</td>
           <td></td>
         </tr>
       </thead>
@@ -84,13 +84,11 @@ class Home extends Component{
 
     </div>
     <div style={{marginTop:50}}>
-    <h1 style={{fontSize:14,textAlign:"center"}}>Datas</h1>
-   
     <div className="pt_maincard">
   
     <div className="pt_card">
     <h1 style={{fontSize:14,textAlign:"center"}}>DasaData</h1>
-     {dasaData.map(i=>{
+     {mock.dasaData.map(i=>{
        return(
       <div className="pt_smallcard">
         <div style={{display:"flex",fontSize:12}}>
@@ -103,7 +101,7 @@ class Home extends Component{
      </div>
      <div className="pt_card">
        <h1 style={{fontSize:14,textAlign:"center"}}>BukthiData</h1>
-      {bukthiData.map(i=>{
+      {mock.bukthiData.map(i=>{
        return(
       <div className="pt_smallcard">
       <div style={{display:"flex",fontSize:12}}>
@@ -116,7 +114,7 @@ class Home extends Component{
      </div>
      <div className="pt_card">
        <h1 style={{fontSize:14,textAlign:"center"}}>AnthraData</h1>
-      {anthraData.map(i=>{
+      {mock.anthraData.map(i=>{
        return(
       <div className="pt_smallcard">
       <div style={{display:"flex",fontSize:12}}>
@@ -129,7 +127,7 @@ class Home extends Component{
      </div>
      <div className="pt_card">
        <h1 style={{fontSize:14,textAlign:"center"}}>SukshmaData</h1>
-      {sukshmaData.map(i=>{
+      {mock.sukshmaData.map(i=>{
        return(
       <div className="pt_smallcard">
        <div style={{display:"flex",fontSize:12}}>
@@ -142,7 +140,7 @@ class Home extends Component{
      </div>
      <div className="pt_card">
        <h1 style={{fontSize:14,textAlign:"center"}}>AdhisukshmaData</h1>
-      {adhiSukshmaData.map(i=>{
+      {mock.adhiSukshmaData.map(i=>{
        return(
       <div className="pt_smallcard">
       <div style={{display:"flex",fontSize:12}}>
@@ -155,7 +153,7 @@ class Home extends Component{
      </div>
      </div>
      <button className="pt_button" style={{float:"right",marginRight:20,marginTop:20}}>Reset</button>
-    </div> */}
+    </div>
     </div>
 
   )
