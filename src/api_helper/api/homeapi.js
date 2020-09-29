@@ -18,18 +18,18 @@ function majorDasha(payload){
 }
 
 function subDasha(payload,query){
-    return Client.ApiCall("POST",`/v1/sub_vdasha/:${query}`,payload)
+    return Client.ApiCall("POST",`/v1/sub_vdasha/${query}`,payload)
 }
 
-function subDasha2(payload,query,query2){
-    return Client.ApiCall("POST",`/v1/sub_sub_vdasha/:${query}/:${query2}`,payload)
+function subDasha2(payload,query){
+    return Client.ApiCall("POST",`/v1/sub_sub_vdasha/${query}`,payload)
 }
 
-function subDasha3(payload,query,query2,query3){
-    return Client.ApiCall("POST",`/v1/sub_sub_sub_vdasha/:${query}/:${query2}/:${query3}`,payload)
+function subDasha3(payload,query){
+    return Client.ApiCall("POST",`/v1/sub_sub_sub_vdasha/${query}`,payload)
 }
 
-function subDasha4(payload,query,query2,query3,query4){
-    return Client.ApiCall("POST",`/v1/sub_sub_sub_sub_vdasha/:${query}/:${query2}/:${query3}/:${query4}`,payload)
+function subDasha4(payload,query){
+    return Client.ApiCall("POST",`/v1/sub_sub_sub_sub_vdasha/${query}`,payload)
 }
 
