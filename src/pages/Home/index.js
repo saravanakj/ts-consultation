@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, useState, Fragment } from 'react';
+import ReactTooltip from 'react-tooltip';
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom";
 import {
@@ -17,32 +18,40 @@ import { prepareChartData } from "./helper"
 import "../../App.css"
 
 
-const DisplayDhasa = ({ data, title, handleClick, keyName }) => (
-  data.length > 0
-    ? (<div className="pt_card">
-      <h1 style={{ fontSize: 14, textAlign: "center" }}>{title}</h1>
-      {data.map(i => {
-        return (
-          <div className="pt_smallcard" onClick={() => handleClick(i.planet, keyName)}>
-            <div style={{ display: "flex", fontSize: 12 }}>
-              <p>&nbsp;{i.planet}</p>
-              <p>&nbsp;{i.start}</p>&nbsp;
+const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
+  const [selecInd, setSelecInd] = useState(null)
+  return (
+    data.length > 0
+      ? (<div className="pt_card">
+        <h1 style={{ fontSize: 14, textAlign: "center" }}>{title}</h1>
+        {data.map(i => {
+          return (
+            <div className={`pt_smallcard ${selecInd === i ? "selected_card" : ""}`} onClick={() => {
+              handleClick(i.planet, keyName)
+              setSelecInd(i)
+            }}>
+              <div style={{ display: "flex", fontSize: 12 }}>
+                <p>&nbsp;{i.planet}</p>
+                <p>&nbsp;{i.start}</p>&nbsp;
        <p>{i.end}</p>
+              </div>
             </div>
-          </div>
-        )
-      })}
-    </div>)
-    : null
-)
+          )
+        })}
+      </div>)
+      : null
+  )
+}
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
-      dasha: {},processing:false
+      dasha: {}
     }
+  }
+  componentDidMount() {
   }
 
   handleInput = (event) => {
@@ -58,7 +67,7 @@ class Home extends Component {
       ayanamsha,
       lat: parseFloat(lat),
       lon: parseFloat(lon),
-      tzone: parseFloat(tzone),
+      tzone: tzone,
       seconds: parseInt(seconds),
     }
     if (date) {
@@ -131,30 +140,30 @@ class Home extends Component {
     return (
       <div>
         <div className="pt_search" >
-          <input className="pt_input" name="ayanamsha" type="text" placeholder="Enter the name" onChange={(event) => this.handleInput(event)} />
-          <input className="pt_input" name="date" type="date" onChange={(event) => this.handleInput(event)} />
-          <input type="time" name="time" className="pt_input" onChange={(event) => this.handleInput(event)} />
-          <input type="number" name="seconds" className="pt_input" placeholder="Seconds" onChange={(event) => this.handleInput(event)} />
-          <input type="number" name="lat" className="pt_input" placeholder="Latitude" onChange={(event) => this.handleInput(event)} />
-          <input type="number" name="lon" className="pt_input" placeholder="Longitude" onChange={(event) => this.handleInput(event)} />
-          <input type="number" name="tzone" className="pt_input" placeholder="TimeZone" onChange={(event) => this.handleInput(event)} />
+          <input className="pt_input" name="ayanamsha" type="text" placeholder="KP" onChange={(event) => this.handleInput(event)} />
+          <input className="pt_input" name="date" type="date" placeholder="2020-10-02" onChange={(event) => this.handleInput(event)} />
+          <input type="time" name="time" className="pt_input" placeholder="08:00" onChange={(event) => this.handleInput(event)} />
+          <input type="number" name="seconds" className="pt_input" placeholder="15" onChange={(event) => this.handleInput(event)} />
+          <input type="number" name="lat" className="pt_input" placeholder="11.45" onChange={(event) => this.handleInput(event)} />
+          <input type="number" name="lon" className="pt_input" placeholder="10.40" onChange={(event) => this.handleInput(event)} />
+          <input type="text" name="tzone" className="pt_input" placeholder="5.5" onChange={(event) => this.handleInput(event)} />
           <button className="pt_button" onClick={this.handleSearch}>Search</button>
         </div>
         <div className="pt_table">
           <table className="table">
             <thead>
               <tr>
-                <td>Planet Name</td>
-                <td>Sign Name</td>
-                <td>Sign Lord</td>
-                <td>House No</td>
-                <td>House Lord</td>
-                <td>Nakshathra NaDatasme</td>
-                <td>Nakshathra Lord</td>
-                <td>Normal Degree</td>
-                <td>Sub lord</td>
-                <td>Sub Sub Lord</td>
-                <td>Sub Sub Lord</td>
+                <td>PL</td>
+                <td>SN</td>
+                <td>SL</td>
+                <td>HN</td>
+                <td>HL</td>
+                <td>DN</td>
+                <td>DAL</td>
+                <td>Full Degree</td>
+                <td>BHL</td>
+                <td>ANL</td>
+                <td>SUKL</td>
                 <td></td>
               </tr>
             </thead>
@@ -162,16 +171,43 @@ class Home extends Component {
               {data.map((c, idx) => (
                 <tr key={`data${idx}`}>
                   <td>{c.planet}</td>
-                  <td>{c.planetSignName}</td>
+                  <td>
+                    {c.planetSignName && (
+                      <Fragment>
+                        <i class="material-icons"  style={{cursor:'pointer'}}data-tip data-for={`planetSignNametooltip${idx}`}>
+                          visibility_off</i>
+                        <ReactTooltip place="top" type="dark" id={`planetSignNametooltip${idx}`}>
+                          {c.planetSignName}
+                        </ReactTooltip>
+                      </Fragment>)}
+                  </td>
                   <td>{c.planetSignLord}</td>
                   <td>{c.houseNo}</td>
                   <td>{c.houseLord}</td>
-                  <td>{c.houseNakshathraName}</td>
+                  <td>
+                    {c.houseNakshathraName && (
+                      <Fragment>
+                        <i class="material-icons" style={{cursor:'pointer'}} data-tip data-for={`houseNakshathraNametooltip${idx}`}>
+                          visibility_off</i>
+                        <ReactTooltip place="top" type="dark" id={`houseNakshathraNametooltip${idx}`}>
+                          {c.houseNakshathraName}
+                        </ReactTooltip>
+                      </Fragment>)}
+                  </td>
                   <td>{c.dhasaLord}</td>
                   <td>{c.degree}</td>
                   <td>{c.bukthiLord}</td>
                   <td>{c.antharaLord}</td>
-                  <td>{c.sukLord}</td>
+                  <td>
+                    {c.sukLord && (
+                      <Fragment>
+                        <i class="material-icons" style={{cursor:'pointer'}}sss data-tip data-for={`sukLordtooltip${idx}`}>
+                          visibility_off</i>
+                        <ReactTooltip place="top" type="dark" id={`sukLordtooltip${idx}`}>
+                          {c.sukLord}
+                        </ReactTooltip>
+                      </Fragment>)}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -199,7 +235,6 @@ class Home extends Component {
 
 function mapStateToProps(state) {
   const { home } = state;
-  console.log("state",state)
   const { search, majorDasha, subDasha, subDasha2, subDasha3, subDasha4 } = home
   const { houses, planets } = search || ""
   const chart = (houses && planets) ? prepareChartData(houses, planets) : [];

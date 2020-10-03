@@ -43,7 +43,6 @@ height: 44px;
  display: flex;
  flex-wrap: wrap;
  margin-top:50px;
- justify-content: center;
 }
 h1{
  
@@ -82,4 +81,9 @@ thead{
  
  color:#fff;
  background-color: rgb(106, 90, 205);
+}
+
+.selected_card {
+ background-color:rgb(106, 90, 205);
+ color:whitesmoke;
 }

@@ -9,7 +9,7 @@ export const prepareChartData = (houses, planets) => {
       bukthiLord: h.sub_lord,
       antharaLord: h.sub_sub_lord,
       sukLord: h.sub_sub_sub_lord,
-      degree: h.norm_degee,
+      degree: h.full_degree,
       houseNo: h.house,
       houseLord: h.house_lord,
       
@@ -17,7 +17,7 @@ export const prepareChartData = (houses, planets) => {
   });
   let planetChart = planets.map((p) => {
     return {
-      degree: p.norm_degree,
+      degree: p.full_degree,
       planet: p.planet_name,
       planetSignName: p.sign_name,
       planetSignLord: p.sign_lord,
