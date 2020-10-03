@@ -170,41 +170,41 @@ class Home extends Component {
             <tbody>
               {data.map((c, idx) => (
                 <tr key={`data${idx}`}>
-                  <td>{c.planet}</td>
+                  <td>{c.planet||"-"}</td>
                   <td>
                     {c.planetSignName && (
                       <Fragment>
                         <i class="material-icons"  style={{cursor:'pointer'}}data-tip data-for={`planetSignNametooltip${idx}`}>
                           visibility_off</i>
                         <ReactTooltip place="top" type="dark" id={`planetSignNametooltip${idx}`}>
-                          {c.planetSignName}
+                          {c.planetSignName||"-"}
                         </ReactTooltip>
                       </Fragment>)}
                   </td>
-                  <td>{c.planetSignLord}</td>
-                  <td>{c.houseNo}</td>
-                  <td>{c.houseLord}</td>
+                  <td>{c.planetSignLord||"-"}</td>
+                  <td>{c.houseNo||"-"}</td>
+                  <td>{c.houseLord||"-"}</td>
                   <td>
                     {c.houseNakshathraName && (
                       <Fragment>
                         <i class="material-icons" style={{cursor:'pointer'}} data-tip data-for={`houseNakshathraNametooltip${idx}`}>
                           visibility_off</i>
                         <ReactTooltip place="top" type="dark" id={`houseNakshathraNametooltip${idx}`}>
-                          {c.houseNakshathraName}
+                          {c.houseNakshathraName||"-"}
                         </ReactTooltip>
                       </Fragment>)}
                   </td>
-                  <td>{c.dhasaLord}</td>
-                  <td>{c.degree}</td>
-                  <td>{c.bukthiLord}</td>
-                  <td>{c.antharaLord}</td>
+                  <td>{c.dhasaLord||"-"}</td>
+                  <td>{c.degree||"-"}</td>
+                  <td>{c.bukthiLord||"-"}</td>
+                  <td>{c.antharaLord||"-"}</td>
                   <td>
                     {c.sukLord && (
                       <Fragment>
                         <i class="material-icons" style={{cursor:'pointer'}}sss data-tip data-for={`sukLordtooltip${idx}`}>
                           visibility_off</i>
                         <ReactTooltip place="top" type="dark" id={`sukLordtooltip${idx}`}>
-                          {c.sukLord}
+                          {c.sukLord||"-"}
                         </ReactTooltip>
                       </Fragment>)}
                   </td>

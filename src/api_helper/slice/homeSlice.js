@@ -127,7 +127,6 @@ export function majorDasha(payload) {
 }
 
 export function subDasha(payload, query) {
-    console.log("subDasha: ", payload, query)
     return dispatch => {
         dispatch(subDashaRequest());
         homeApi.subDasha(payload, query).then(
