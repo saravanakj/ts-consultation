@@ -31,7 +31,7 @@ const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
               setSelecInd(i)
             }}>
               <div style={{ display: "flex", fontSize: 12 }}>
-                <p>&nbsp;{i.planet}</p>
+                <p>&nbsp;{i.planet.substring(0,2)}</p>
                 <p>&nbsp;{i.start}</p>&nbsp;
        <p>{i.end}</p>
               </div>
@@ -170,7 +170,8 @@ class Home extends Component {
             <tbody>
               {data.map((c, idx) => (
                 <tr key={`data${idx}`}>
-                  <td>{c.planet||"-"}</td>
+                 {c.planet ===undefined &&<td>{c.planet||"-"}</td>}
+                  {c.planet !==undefined &&<td>{c.planet.substring(0,2)}</td>}
                   <td>
                     {c.planetSignName && (
                       <Fragment>
