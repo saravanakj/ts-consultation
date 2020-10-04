@@ -183,7 +183,7 @@ class Home extends Component {
             <tbody>
               {data.map((c, idx) => (
                 <tr key={`data${idx}`}>
-                  <td>{idx+1}</td>
+                  <td>{c.houseId}</td>
                  
                   <td>
                       <Fragment>
