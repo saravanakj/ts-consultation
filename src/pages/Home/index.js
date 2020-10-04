@@ -165,18 +165,18 @@ class Home extends Component {
           <table className="table">
             <thead>
               <tr>
-                <td>#b</td>
-                <td>SN</td>
+                <td>B#</td>
+                <td>Hidden</td>
                 <td>SL</td>
-                <td>DN</td>
                 <td>DAL</td>
                 <td>BHL</td>
                 <td>ANL</td>
-                <td>SUKL</td>
                 <td>Full Degree</td>
                 <td>PL</td>
-                <td>NN</td>
+                <td>PSL</td>
                 <td>NL</td>
+                <td>PSUL</td>
+                <td>SSL</td>
           
               </tr>
             </thead>
@@ -186,48 +186,34 @@ class Home extends Component {
                   <td>{idx+1}</td>
                  
                   <td>
-                    {c.planetSignName && (
                       <Fragment>
                         <i class="material-icons"  style={{cursor:'pointer'}}data-tip data-for={`planetSignNametooltip${idx}`}>
                           visibility_off</i>
                         <ReactTooltip place="top" type="dark" id={`planetSignNametooltip${idx}`}>
-                          {c.planetSignName||"-"}
+                          PSN:{c.planetSignName||"-"}&nbsp;,DN:{c.houseNakshathraName||"-"},&nbsp;HSN:{c.houseSignName||"-"},&nbsp;SUKL:{c.sukLord||"-"},&nbsp;NN:{c.planetNakName||"-"},&nbsp;SSS:{c.planetSubSubSubLord||"-"}
                         </ReactTooltip>
-                      </Fragment>)}
+                      </Fragment>
                   </td>
-                  <td>
-                    {c.houseNakshathraName && (
-                      <Fragment>
-                        <i class="material-icons" style={{cursor:'pointer'}} data-tip data-for={`houseNakshathraNametooltip${idx}`}>
-                          visibility_off</i>
-                        <ReactTooltip place="top" type="dark" id={`houseNakshathraNametooltip${idx}`}>
-                          {c.houseNakshathraName||"-"}
-                        </ReactTooltip>
-                      </Fragment>)}
-                  </td>
+                  
+                  {c.houseSignLord===undefined && <td>{"-"}</td>}
+                  {c.houseSignLord!==undefined && <td>{c.houseSignLord.substring(0,2)}</td>}
                   {c.dhasaLord===undefined && <td>{"-"}</td>}
                   {c.dhasaLord!==undefined && <td>{c.dhasaLord.substring(0,2)}</td>}
-                  {c.planetSignLord===undefined && <td>{"-"}</td>}
-                  {c.planetSignLord!==undefined && <td>{c.planetSignLord.substring(0,2)}</td>}
                   {c.bukthiLord ===undefined&& <td>{"-"}</td>}
                   {c.bukthiLord !==undefined&& <td>{c.bukthiLord.substring(0,2)}</td>}
                   {c.antharaLord ===undefined&&<td>{"-"}</td>}
                   {c.antharaLord !==undefined&&<td>{c.antharaLord.substring(0,2)}</td>}
-                  <td>
-                    {c.sukLord && (
-                      <Fragment>
-                        <i class="material-icons" style={{cursor:'pointer'}}sss data-tip data-for={`sukLordtooltip${idx}`}>
-                          visibility_off</i>
-                        <ReactTooltip place="top" type="dark" id={`sukLordtooltip${idx}`}>
-                          {c.sukLord||"-"}
-                        </ReactTooltip>
-                      </Fragment>)}
-                  </td>
                   <td>{c.degree||"-"}</td>
                   {c.planet ===undefined &&<td>{c.planet||"-"}</td>}
                   {c.planet !==undefined &&<td>{c.planet.substring(0,2)}</td>}
-                  <td>{c.houseNo||"-"}</td>
-                  <td>{c.houseLord||"-"}</td>
+                  {c.planetSignLord ===undefined &&<td>{c.planetSignLord||"-"}</td>}
+                  {c.planetSignLord !==undefined &&<td>{c.planetSignLord.substring(0,2)}</td>}
+                  {c.planetNakLord ===undefined&&<td>{"-"}</td>}
+                  {c.planetNakLord !==undefined&&<td>{c.planetNakLord.substring(0,2)}</td>}
+                  {c.planetSubLord ===undefined&&<td>{"-"}</td>}
+                  {c.planetSubLord !==undefined&&<td>{c.planetSubLord.substring(0,2)}</td>}
+                  {c.planetSubSubLord ===undefined&&<td>{"-"}</td>}
+                  {c.planetSubSubLord !==undefined&&<td>{c.planetSubSubLord.substring(0,2)}</td>}
                  </tr>
               ))}
             </tbody>
