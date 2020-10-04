@@ -153,25 +153,26 @@ class Home extends Component {
           <table className="table">
             <thead>
               <tr>
-                <td>PL</td>
+                <td>#b</td>
                 <td>SN</td>
                 <td>SL</td>
-                <td>HN</td>
-                <td>HL</td>
                 <td>DN</td>
                 <td>DAL</td>
-                <td>Full Degree</td>
                 <td>BHL</td>
                 <td>ANL</td>
                 <td>SUKL</td>
-                <td></td>
+                <td>Full Degree</td>
+                <td>PL</td>
+                <td>NN</td>
+                <td>NL</td>
+          
               </tr>
             </thead>
             <tbody>
               {data.map((c, idx) => (
                 <tr key={`data${idx}`}>
-                 {c.planet ===undefined &&<td>{c.planet||"-"}</td>}
-                  {c.planet !==undefined &&<td>{c.planet.substring(0,2)}</td>}
+                  <td>{idx+1}</td>
+                 
                   <td>
                     {c.planetSignName && (
                       <Fragment>
@@ -182,9 +183,6 @@ class Home extends Component {
                         </ReactTooltip>
                       </Fragment>)}
                   </td>
-                  <td>{c.planetSignLord||"-"}</td>
-                  <td>{c.houseNo||"-"}</td>
-                  <td>{c.houseLord||"-"}</td>
                   <td>
                     {c.houseNakshathraName && (
                       <Fragment>
@@ -195,10 +193,14 @@ class Home extends Component {
                         </ReactTooltip>
                       </Fragment>)}
                   </td>
-                  <td>{c.dhasaLord||"-"}</td>
-                  <td>{c.degree||"-"}</td>
-                  <td>{c.bukthiLord||"-"}</td>
-                  <td>{c.antharaLord||"-"}</td>
+                  {c.dhasaLord===undefined && <td>{"-"}</td>}
+                  {c.dhasaLord!==undefined && <td>{c.dhasaLord.substring(0,2)}</td>}
+                  {c.planetSignLord===undefined && <td>{"-"}</td>}
+                  {c.planetSignLord!==undefined && <td>{c.planetSignLord.substring(0,2)}</td>}
+                  {c.bukthiLord ===undefined&& <td>{"-"}</td>}
+                  {c.bukthiLord !==undefined&& <td>{c.bukthiLord.substring(0,2)}</td>}
+                  {c.antharaLord ===undefined&&<td>{"-"}</td>}
+                  {c.antharaLord !==undefined&&<td>{c.antharaLord.substring(0,2)}</td>}
                   <td>
                     {c.sukLord && (
                       <Fragment>
@@ -209,7 +211,12 @@ class Home extends Component {
                         </ReactTooltip>
                       </Fragment>)}
                   </td>
-                </tr>
+                  <td>{c.degree||"-"}</td>
+                  {c.planet ===undefined &&<td>{c.planet||"-"}</td>}
+                  {c.planet !==undefined &&<td>{c.planet.substring(0,2)}</td>}
+                  <td>{c.houseNo||"-"}</td>
+                  <td>{c.houseLord||"-"}</td>
+                 </tr>
               ))}
             </tbody>
           </table>
