@@ -1,3 +1,25 @@
+/*
+b#    - Visible - B#
+house-lord houses[].sign_lord - Visible - SL
+dhasa-lord houses[].nak-lord - Visible - DAL
+buk-lord houses[].sub-lord - Visible - BHL
+anthara-lord houses[].sub-sub-lord - Visible - ANL
+deg min sec getDegree(houses[].full_degree) - Visible
+deg min sec getDegree(planets[].full_degree) - Visible
+planet planets[].planet_name -  Visible - PL
+house-lord planets[].sign_lord - Visible - SL
+nak-lord         planets[].nak-lord - Visible - NL
+sub-lord planets[].sub-lord - Visible - SL
+sub-sub-lord planets[].sub-sub-lord - Visible - SSL
+
+nak-name houses[].nak-name - Hidden - DN
+sign-name houses[].sign_name - ( hidden ) - HSN
+suk-lord houses[].sub-sub-sub-lord - Hidden - SUKL
+nak-name planets[].nak-name - Hidden - NN
+sign-name planets[].sign_name - Hidden - PSN
+sub-sub-sub-lord planets[].sub-sub-sub-lord - Hidden - SSS
+
+*/
 export const prepareChartData = (houses, planets) => {
   let houseChart = houses.map((h) => {
     return {
