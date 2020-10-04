@@ -48,7 +48,19 @@ class Home extends Component {
     super(props);
     this.state = {
       data: [],
-      dasha: {}
+      dasha: {},
+      date: '1985-10-13',
+      time: '12:36',
+      day: 13,
+      month: 10,
+      year: 1985,
+      hour: 12,
+      min: 36,
+      seconds: 45,
+      lat: 11.7384,
+      lon: 78.9639,
+      tzone: 5.5,
+      ayanamsha: "KP"
     }
   }
   componentDidMount() {
@@ -141,12 +153,12 @@ class Home extends Component {
       <div>
         <div className="pt_search" >
           <input className="pt_input" name="ayanamsha" type="text" placeholder="KP" onChange={(event) => this.handleInput(event)} />
-          <input className="pt_input" name="date" type="date" placeholder="2020-10-02" onChange={(event) => this.handleInput(event)} />
-          <input type="time" name="time" className="pt_input" placeholder="08:00" onChange={(event) => this.handleInput(event)} />
-          <input type="number" name="seconds" className="pt_input" placeholder="15" onChange={(event) => this.handleInput(event)} />
-          <input type="number" name="lat" className="pt_input" placeholder="11.45" onChange={(event) => this.handleInput(event)} />
-          <input type="number" name="lon" className="pt_input" placeholder="10.40" onChange={(event) => this.handleInput(event)} />
-          <input type="text" name="tzone" className="pt_input" placeholder="5.5" onChange={(event) => this.handleInput(event)} />
+          <input className="pt_input" name="date" type="date" value={this.state.date} onChange={(event) => this.handleInput(event)} />
+          <input type="time" name="time" className="pt_input" value={this.state.time} onChange={(event) => this.handleInput(event)} />
+          <input type="number" name="seconds" className="pt_input" value={this.state.seconds} onChange={(event) => this.handleInput(event)} />
+          <input type="number" name="lat" className="pt_input" value={this.state.lat} onChange={(event) => this.handleInput(event)} />
+          <input type="number" name="lon" className="pt_input" value={this.state.lon} onChange={(event) => this.handleInput(event)} />
+          <input type="text" name="tzone" className="pt_input" value={this.state.tzone} onChange={(event) => this.handleInput(event)} />
           <button className="pt_button" onClick={this.handleSearch}>Search</button>
         </div>
         <div className="pt_table">
