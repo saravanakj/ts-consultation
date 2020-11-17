@@ -1,13 +1,23 @@
-
+body{
+  background-color: #F0F1F8 !important;
+}
+.row_block{
+  padding: 0px 20px;
+  overflow: hidden;
+  margin: 20px 0px;
+}
 .pt_search{
   position: relative!important;
   display:flex;
   flex-direction: row;
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,.18);
-  z-index:10;
-  top:20px;
-  width:fit-content;
- margin: 0 auto 20px auto;
+
+  
+  width:100%;
+ 
+ box-shadow: 0px 12px 10px rgba(0, 0, 0, 0.02);
+  border-radius: 2px;
+  padding:10px 30px 10px 10px;
+  background-color: #fff;
 }
 .pt_input{
 
@@ -15,10 +25,15 @@ outline: none;
 border:none;
 
 height: 44px;
+padding:0px 20px;
+border-right:1px solid #eaeaea; 
 
 }
+.pt_input:hover, .pt_input:focus{
+  background-color: #f6f6f6;
+}
 .pt_button{
- width:80px;
+ margin-left: 10px;;
  height: 46px;
  border:none;
  background-color: rgb(106, 90, 205);
@@ -28,62 +43,157 @@ height: 44px;
 
 }
 .pt_table{
- margin-top:50px;
- padding-right:20px ;
+ 
+  
  justify-content: center;
- height: 486px;
+ max-height: 2000px;
  border-radius: 1px;
- overflow: scroll;
- margin-left: 20px;
- margin-left: 20px;
- box-shadow: 4px 4px 4px 0px rgba(0,0,0,.18);
-}
-.pt_maincard{
- position: relative;
- display: flex;
- flex-wrap: wrap;
- margin-top:50px;
-}
-h1{
+ overflow: auto;
+ border: 1px solid #eee;
  
 }
-.pt_card{
- width:200px;
- background-color: #fff;
- border-radius: 1px;
- max-height: 280px;
- margin-left: 20px;
- margin-right:20px;
- overflow: scroll;
- box-sizing: border-box;
- scroll-behavior: smooth;
- box-shadow: 4px 4px 4px 0px rgba(0,0,0,.18);
+.table_container{
+  overflow: hidden;
+  padding: 0px 20px;
 }
+.table_split{
+  
+  width: calc(50% - 10px);
+  
+  box-sizing: border-box;
+}
+.float_left{
+  float: left;
+}
+.float_right{
+  float:right;
+}
+.w10{
+  width: 10%;
+}
+.w12{
+  width: 12%;
+}
+.w15{
+  width: 15%;
+}
+.w20{
+  width: 20%;
+}
+.w40{
+  width: 40%;
+}
+.search_txt_box{
+  width: calc(25% - 110px);
+}
+.w100p{
+  width: 100px;
+}
+
 .pt_table::-webkit-scrollbar{
  display: none;
 }
 .pt_card::-webkit-scrollbar{
  display: none;
 }
-.pt_smallcard{
- width:200px;
- border:"none";
- border-bottom-style: solid;
- border-bottom-color: rgba(165, 164, 164, 0.898);
- cursor: pointer;
-}
+
 
 
 table{
  background-color: #fff;
 }
-thead{
- 
- color:#fff;
- background-color: rgb(106, 90, 205);
+.table td {
+  padding: 5px !important;
+  vertical-align: top !important;
+  border-bottom: 1px solid #ddd !important;
+  border-top: none !important;
+  font-size: 14px;
 }
 
-.selected_card {
- background-color:rgb(106, 90, 205);
- color:whitesmoke;
+.table td.highlight{
+  background-color: #f2f2f2;
+  color: red;
+}
+/* .table tr:nth-child(even) {background-color: #f6f6f6;} */
+.table td .material-icons{
+  font-size: 16px;
+}
+.table thead td{
+  padding: 5px !important;
+  background-color: #E2E4EF;
+  position: sticky;
+  top: 0;
+  height: 50px;
+  box-sizing: border-box;
+  vertical-align: middle !important;
+}
+.table_header{
+ 
+ color:#000;
+ background-color: #E2E4EF;
+ font-weight: 500;
+ font-size: 14px;
+}
+.table tbody tr:hover{
+  background-color: #FFFFF3;
+}
+
+.pt_maincard{
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top:50px;
+ }
+ h1{
+  
+ }
+ .pt_card{
+  width: calc(20% - 20px);
+  box-sizing: border-box;
+  border-radius: 1px;
+  margin-right: 20px;
+ }
+ .pt_card h1{
+   font-size: 14px;
+   font-weight: 600;
+   text-align: left;
+ }
+ .pt_card:last-child{
+  width: 20%;
+  margin-right: 0px;
+ }
+ .pt_smallcard_cotaier{
+  max-height: 280px;
+  overflow: auto;
+  scroll-behavior: smooth;
+  background-color: #fff;
+}
+
+ .pt_smallcard{
+  width:100%;
+  
+  border-bottom: 1px solid #ddd !important;
+  cursor: pointer;
+ }
+ .pt_smallcard:hover{
+   background-color: #E2E4EF;
+ }
+ .dasa_cell{
+   display: table-cell;
+   box-sizing: border-box;
+   padding: 5px 10px;
+   white-space: nowrap;
+   border-right: 1px dotted #ddd;
+   font-size: 12px;;
+ }
+ .dasa_cell:last-child{
+   border-right: none;
+ }
+.selected_card, selected_card:hover  {
+ background-color:#E2E4EF;
+ color:#000;
+}
+.dasa_split {
+  width: calc(20% - 80px);
+  box-sizing: border-box;
 }
