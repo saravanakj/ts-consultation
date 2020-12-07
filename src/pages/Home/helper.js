@@ -37,7 +37,7 @@ export const prepareChartData = (houses, planets) => {
       
     }
   });
-  let planetChart = planets.map((p) => {
+  let planetChart = planets.filter(p => !(p.planet_name.startsWith("Ur") || p.planet_name.startsWith("Pl") || p.planet_name.startsWith("Ne")) ).map((p) => {
     return {
       degree: p.full_degree,
       planet: p.planet_name,

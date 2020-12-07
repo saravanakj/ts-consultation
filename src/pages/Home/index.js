@@ -201,24 +201,24 @@ class Home extends Component {
                         </Fragment>
                     </td>
                     
-                    {c.houseSignLord===undefined && <td>{"-"}</td>}
-                    {c.houseSignLord!==undefined && <td>{c.houseSignLord.substring(0,2)}</td>}
-                    {c.dhasaLord===undefined && <td className="highlight">{"-"}</td>}
+                    {c.houseSignLord===undefined && <td>{""}</td>}
+                    {c.houseSignLord!==undefined && <td className="dull_part">{c.houseSignLord.substring(0,2)}</td>}
+                    {c.dhasaLord===undefined && <td className="highlight">{""}</td>}
                     {c.dhasaLord!==undefined && <td className="highlight">{c.dhasaLord.substring(0,2)}</td>}
-                    {c.bukthiLord ===undefined&& <td>{"-"}</td>}
+                    {c.bukthiLord ===undefined&& <td>{""}</td>}
                     {c.bukthiLord !==undefined&& <td className="highlight">{c.bukthiLord.substring(0,2)}</td>}
-                    {c.antharaLord ===undefined&&<td>{"-"}</td>}
+                    {c.antharaLord ===undefined&&<td>{""}</td>}
                     {c.antharaLord !==undefined&&<td className="highlight">{c.antharaLord.substring(0,2)}</td>}
-                    <td>{c.degree||"-"}</td>
-                    {c.planet ===undefined &&<td>{c.planet||"-"}</td>}
+                    <td>{c.degree||""}</td>
+                    {c.planet ===undefined &&<td>{c.planet||""}</td>}
                     {c.planet !==undefined &&<td>{c.planet.substring(0,2)}</td>}
-                    {c.planetSignLord ===undefined &&<td>{c.planetSignLord||"-"}</td>}
+                    {c.planetSignLord ===undefined &&<td>{c.planetSignLord||""}</td>}
                     {c.planetSignLord !==undefined &&<td className="highlight">{c.planetSignLord.substring(0,2)}</td>}
-                    {c.planetNakLord ===undefined&&<td>{"-"}</td>}
+                    {c.planetNakLord ===undefined&&<td>{""}</td>}
                     {c.planetNakLord !==undefined&&<td>{c.planetNakLord.substring(0,2)}</td>}
-                    {c.planetSubLord ===undefined&&<td>{"-"}</td>}
+                    {c.planetSubLord ===undefined&&<td>{""}</td>}
                     {c.planetSubLord !==undefined&&<td>{c.planetSubLord.substring(0,2)}</td>}
-                    {c.planetSubSubLord ===undefined&&<td>{"-"}</td>}
+                    {c.planetSubSubLord ===undefined&&<td>{""}</td>}
                     {c.planetSubSubLord !==undefined&&<td>{c.planetSubSubLord.substring(0,2)}</td>}
                   </tr>
                 ))}

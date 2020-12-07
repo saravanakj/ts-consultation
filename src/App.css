@@ -1,5 +1,6 @@
 body{
   background-color: #F0F1F8 !important;
+  color: #000;
 }
 .row_block{
   padding: 0px 20px;
@@ -101,6 +102,8 @@ border-right:1px solid #eaeaea;
 
 table{
  background-color: #fff;
+ color: #000 !important;
+ 
 }
 .table td {
   padding: 5px !important;
@@ -126,6 +129,7 @@ table{
   height: 50px;
   box-sizing: border-box;
   vertical-align: middle !important;
+  
 }
 .table_header{
  
@@ -196,4 +200,7 @@ table{
 .dasa_split {
   width: calc(20% - 80px);
   box-sizing: border-box;
+}
+.dull_part{
+  color: #999;;
 }
