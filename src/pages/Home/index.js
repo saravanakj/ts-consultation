@@ -163,6 +163,7 @@ class Home extends Component {
             <input type="number" name="lat" className="pt_input w15" value={this.state.lat} onChange={(event) => this.handleInput(event)} />
             <input type="number" name="lon" className="pt_input w15" value={this.state.lon} onChange={(event) => this.handleInput(event)} />
             <input type="text" name="tzone" className="pt_input w15" value={this.state.tzone} onChange={(event) => this.handleInput(event)} />
+            <input type="text" name="place" className="pt_input w15" value="Place"  />
             <button className="pt_button w100p" onClick={this.handleSearch}>Search</button>
           </div>
         </div>
@@ -171,7 +172,7 @@ class Home extends Component {
             <table className="table">
               <thead className="table_header">
                 <tr>
-                  <td>B#</td>
+                  <td className="bava_no">B#</td>
                   <td>Hidden</td>
                   <td>SL</td>
                   <td>DAL</td>
@@ -189,9 +190,9 @@ class Home extends Component {
               <tbody>
                 {data.map((c, idx) => (
                   <tr key={`data${idx}`}>
-                    <td>{c.houseId}</td>
+                    <td className="bava_no">{c.houseId}</td>
                   
-                    <td>
+                    <td className="dull_part1">
                         <Fragment>
                           <i class="material-icons"  style={{cursor:'pointer'}}data-tip data-for={`planetSignNametooltip${idx}`}>
                             visibility_off</i>
@@ -210,14 +211,14 @@ class Home extends Component {
                     {c.antharaLord ===undefined&&<td>{""}</td>}
                     {c.antharaLord !==undefined&&<td className="highlight">{c.antharaLord.substring(0,2)}</td>}
                     <td>{c.degree||""}</td>
-                    {c.planet ===undefined &&<td>{c.planet||""}</td>}
-                    {c.planet !==undefined &&<td>{c.planet.substring(0,2)}</td>}
-                    {c.planetSignLord ===undefined &&<td>{c.planetSignLord||""}</td>}
-                    {c.planetSignLord !==undefined &&<td className="highlight">{c.planetSignLord.substring(0,2)}</td>}
+                    {c.planet ===undefined &&<td className="highlight">{c.planet||""}</td>}
+                    {c.planet !==undefined &&<td className="highlight">{c.planet.substring(0,2)}</td>}
+                    {c.planetSignLord ===undefined &&<td className="dull_part">{c.planetSignLord||""}</td>}
+                    {c.planetSignLord !==undefined &&<td className="dull_part">{c.planetSignLord.substring(0,2)}</td>}
                     {c.planetNakLord ===undefined&&<td>{""}</td>}
-                    {c.planetNakLord !==undefined&&<td>{c.planetNakLord.substring(0,2)}</td>}
+                    {c.planetNakLord !==undefined&&<td className="highlight">{c.planetNakLord.substring(0,2)}</td>}
                     {c.planetSubLord ===undefined&&<td>{""}</td>}
-                    {c.planetSubLord !==undefined&&<td>{c.planetSubLord.substring(0,2)}</td>}
+                    {c.planetSubLord !==undefined&&<td className="highlight">{c.planetSubLord.substring(0,2)}</td>}
                     {c.planetSubSubLord ===undefined&&<td>{""}</td>}
                     {c.planetSubSubLord !==undefined&&<td>{c.planetSubSubLord.substring(0,2)}</td>}
                   </tr>

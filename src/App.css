@@ -114,8 +114,9 @@ table{
 }
 
 .table td.highlight{
-  background-color: #f2f2f2;
-  color: red;
+  
+  color: blue;
+  font-weight: 500;
 }
 /* .table tr:nth-child(even) {background-color: #f6f6f6;} */
 .table td .material-icons{
@@ -202,5 +203,11 @@ table{
   box-sizing: border-box;
 }
 .dull_part{
+  color: #000;;
+}
+.dull_part1{
   color: #999;;
+}
+.bava_no{
+  text-align: center;
 }
