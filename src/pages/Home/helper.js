@@ -50,22 +50,29 @@ export const prepareChartData = (houses, planets) => {
       planetSubSubSubLord: p.sub_sub_sub_lord,
     }
   });
+  planetChart = planetChart.sort((a, b) => a.degree - b.degree);
   let chart = houseChart.sort((a, b) => a.houseId - b.houseId);
-  for(let pIdx=0;pIdx< planetChart.length; pIdx++) {
-    let planetIdx = chart.findIndex((chartEl) => {
-        let located = chart.length;
-        let planetDeg = planetChart[pIdx].degree;
-        for(let idx=0;idx< chart.length-1; idx++) {
-          if(chart[idx].degree < planetDeg && planetDeg < chart[idx + 1].degree) {
-            located = idx;
-          }
-          else if(chart[idx].degree > planetDeg && planetDeg < chart[idx + 1].degree) {
-            located = idx;
-          }
-        }
-        return located;
-    });
-    chart.splice(planetIdx,0,planetChart[idx]);
+  for(let pIdx=0;pIdx< planetChart.length; pIdx++)  {
+    let located = locateIndex(chart, planetChart[pIdx].degree);
+    chart.splice(located,0,planetChart[pIdx]);
   }
   return chart;
+}
+
+export const locateIndex = (chart, planetDegree) => {
+  let located = chart.length;
+  for(let idx = 0; idx < chart.length-1;idx++) {
+    let currentDegree = chart[idx].degree;
+    let nextDegree = chart[idx + 1].degree;
+    if(currentDegree <= nextDegree) {
+      if(currentDegree <= planetDegree && planetDegree <= nextDegree) {
+        located = idx;
+      }
+    } else {
+      if(planetDegree <= nextDegree) {
+        located = idx;
+      }
+    }
+  }   
+  return located+1;   
 }
