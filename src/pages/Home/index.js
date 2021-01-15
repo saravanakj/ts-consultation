@@ -54,7 +54,7 @@ class Home extends Component {
       data: [],
       dasha: {},
       date: '1985-10-13',
-      time: '12:36',
+      time: '12:36:45',
       day: 13,
       month: 10,
       year: 1985,
@@ -97,6 +97,7 @@ class Home extends Component {
       const splitTime = time.split(":")
       payload.hour = parseInt(splitTime[0])
       payload.min = parseInt(splitTime[1])
+      payload.seconds = parseInt(splitTime[2])
     }
     this.setState({
       payload: payload
@@ -157,12 +158,12 @@ class Home extends Component {
       <div>
         <div className="row_block">
           <div className="pt_search" >
-            <input className="pt_input search_txt_box" name="ayanamsha" type="text" placeholder="KP" onChange={(event) => this.handleInput(event)} />
+            <input className="pt_input search_txt_box w10" name="ayanamsha" type="text" placeholder="Name" onChange={(event) => this.handleInput(event)} />
             <input className="pt_input w15" name="date" type="date" value={this.state.date} onChange={(event) => this.handleInput(event)} />
-            <input type="time" name="time" className="pt_input w15" value={this.state.time} onChange={(event) => this.handleInput(event)} />
-            <input type="number" name="lat" className="pt_input w15" value={this.state.lat} onChange={(event) => this.handleInput(event)} />
-            <input type="number" name="lon" className="pt_input w15" value={this.state.lon} onChange={(event) => this.handleInput(event)} />
-            <input type="text" name="tzone" className="pt_input w15" value={this.state.tzone} onChange={(event) => this.handleInput(event)} />
+            <input type="text" name="time" className="pt_input w15" value={this.state.time} onChange={(event) => this.handleInput(event)} />
+            <input type="number" name="lat" className="pt_input w10" value={this.state.lat} onChange={(event) => this.handleInput(event)} />
+            <input type="number" name="lon" className="pt_input w10" value={this.state.lon} onChange={(event) => this.handleInput(event)} />
+            <input type="text" name="tzone" className="pt_input w10" value={this.state.tzone} onChange={(event) => this.handleInput(event)} />
             <input type="text" name="place" className="pt_input w15" value="Place"  />
             <button className="pt_button w100p" onClick={this.handleSearch}>Search</button>
           </div>
