@@ -57,6 +57,10 @@ border-right:1px solid #eaeaea;
   overflow: hidden;
   padding: 0px 20px;
 }
+.bava_table_container{
+  overflow: hidden;
+  padding: 0px 0px;
+}
 .table_split{
   
   width: calc(50% - 10px);
@@ -147,26 +151,25 @@ table{
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  margin-top:50px;
+  margin-top:0px;
  }
  h1{
   
  }
  .pt_card{
-  width: calc(20% - 20px);
+  width: calc(50% - 20px);
   box-sizing: border-box;
   border-radius: 1px;
   margin-right: 20px;
+  margin-bottom: 20px;;
+  min-width: 200px;
  }
  .pt_card h1{
    font-size: 14px;
    font-weight: 600;
    text-align: left;
  }
- .pt_card:last-child{
-  width: 20%;
-  margin-right: 0px;
- }
+ 
  .pt_smallcard_cotaier{
   max-height: 280px;
   overflow: auto;
