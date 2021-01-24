@@ -34,8 +34,8 @@ const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
               }}>
                 <div style={{ display: "table", fontSize: 12 }}>
                   <div className="dasa_cell w20">{i.planet.substring(0,2)}</div>
-                  <div className="dasa_cell w40">{i.start}</div>
-                  <div className="dasa_cell w40">{i.end}</div>
+                  <div className="dasa_cell w40">{i.start.substring(0,10)}</div>
+                  <div className="dasa_cell w40">{i.end.substring(0,10)}</div>
                 </div>
               </div>
            
