@@ -25,22 +25,27 @@ const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
       ? (<div className="pt_card">
         <h1>{title}</h1>
         <div className="pt_smallcard_cotaier">
+        <table>
         {data.map(i => {
           return (
             
-              <div className={`pt_smallcard ${selecInd === i ? "selected_card" : ""}`} onClick={() => {
+             
+                
+                  <tr className={`pt_smallcard ${selecInd === i ? "selected_card" : ""}`} onClick={() => {
                 handleClick(i.planet, keyName)
                 setSelecInd(i)
               }}>
-                <div style={{ display: "table", fontSize: 12 }}>
-                  <div className="dasa_cell w20">{i.planet.substring(0,2)}</div>
-                  <div className="dasa_cell w40">{i.start.substring(0,10)}</div>
-                  <div className="dasa_cell w40">{i.end.substring(0,10)}</div>
-                </div>
-              </div>
+                    <td className="dasa_cell w20">{i.planet.substring(0,2)}</td>
+                    <td className="dasa_cell w40">{i.start.substring(0,10)}</td>
+                    <td className="dasa_cell w40">{i.end.substring(0,10)}</td>
+                  </tr>
+                
+              
            
           )
         })}
+        </table>
+               
          </div>
       </div>)
       : null
@@ -202,7 +207,7 @@ class Home extends Component {
                   <td>PL</td>
                   <td>PSL</td>
                   <td>NL</td>
-                  <td>PSUL</td>
+                  <td>PSU</td>
                   <td>SSL</td>
             
                 </tr>

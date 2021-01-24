@@ -156,12 +156,11 @@ table{
   
  }
  .pt_card{
-  width: calc(50% - 20px);
+  width: calc(33% - 20px);
   box-sizing: border-box;
   border-radius: 1px;
   margin-right: 20px;
-  margin-bottom: 20px;;
-  min-width: 200px;
+  margin-bottom: 20px;
  }
  .pt_card h1{
    font-size: 14px;
@@ -170,10 +169,11 @@ table{
  }
  
  .pt_smallcard_cotaier{
-  max-height: 280px;
+  max-height: 320px;
   overflow: auto;
   scroll-behavior: smooth;
   background-color: #fff;
+  display: table;
 }
 
  .pt_smallcard{
@@ -181,6 +181,7 @@ table{
   
   border-bottom: 1px solid #ddd !important;
   cursor: pointer;
+  display: table-row;
  }
  .pt_smallcard:hover{
    background-color: #E2E4EF;
@@ -191,7 +192,7 @@ table{
    padding: 5px 10px;
    white-space: nowrap;
    border-right: 1px dotted #ddd;
-   font-size: 12px;;
+   font-size: 14px;
  }
  .dasa_cell:last-child{
    border-right: none;
