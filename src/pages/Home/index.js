@@ -156,6 +156,13 @@ class Home extends Component {
     });
   }
 
+  onReceiveLocationOtherDetails = (data) => {
+    let tzone= data.offset ? data.offset/60 : this.state.tzone;
+    this.setState({
+      tzone: tzone
+    });
+  }
+
   render() {
     const { data,
       majorDasha,
@@ -175,7 +182,8 @@ class Home extends Component {
             <input type="text" name="tzone" className="pt_input w10" value={this.state.tzone} onChange={(event) => this.handleInput(event)} />
             <LocationSearchInput address={this.state.place}
               className="places-input"
-               locationSelected={this.locationSelected} placeholder="Location"/>
+               locationSelected={this.locationSelected} 
+               onReceiveOtherDetails={this.onReceiveLocationOtherDetails}/>
             <button className="pt_button w100p" onClick={this.handleSearch}>Search</button>
           </div>
         </div>

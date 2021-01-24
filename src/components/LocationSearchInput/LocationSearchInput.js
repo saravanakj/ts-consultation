@@ -28,6 +28,22 @@ export class LocationSearchInput extends React.Component {
         this.props.locationSelected(data);
       })
       .catch(error => console.error('Error', error));
+
+    
+      const div = document.createElement('div')
+      if((window).google && (window).google.maps && (window).google.maps.places) {
+        let service = new (window).google.maps.places.PlacesService(div);
+        service.getDetails({placeId: placeId}, (results, status) => {
+          if (status === (window).google.maps.places.PlacesServiceStatus.OK) {
+            if(results && results.utc_offset_minutes && this.props.onReceiveOtherDetails) {
+                this.props.onReceiveOtherDetails({ offset: results.utc_offset_minutes });
+            }
+          } else {
+            console.log('place details not found!');
+          }
+        })
+    }
+
   };
  
   render() {
@@ -41,7 +57,7 @@ export class LocationSearchInput extends React.Component {
           <div>
             <input
               {...getInputProps({
-                placeholder: 'Search Places ...',
+                placeholder: 'Place',
                 className: 'location-search-input',
               })}/>
             <div className="autocomplete-dropdown-container">
