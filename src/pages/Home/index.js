@@ -240,7 +240,7 @@ class Home extends Component {
                     {c.planetSubLord ===undefined&&<td>{""}</td>}
                     {c.planetSubLord !==undefined&&<td className="highlight">{c.planetSubLord.substring(0,2)}</td>}
                     {c.planetSubSubLord ===undefined&&<td>{""}</td>}
-                    {c.planetSubSubLord !==undefined&&<td>{c.planetSubSubLord.substring(0,2)}</td>}
+                    {c.planetSubSubLord !==undefined&&<td className="highlight">{c.planetSubSubLord.substring(0,2)}</td>}
                   </tr>
                 ))}
               </tbody>
