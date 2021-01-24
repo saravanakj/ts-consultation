@@ -16,7 +16,7 @@ import {
 } from "../../api_helper/slice/homeSlice";
 import { prepareChartData } from "./helper"
 import "../../App.css"
-
+import { LocationSearchInput } from "../../components/LocationSearchInput/LocationSearchInput";
 
 const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
   const [selecInd, setSelecInd] = useState(null)
@@ -64,7 +64,8 @@ class Home extends Component {
       lat: 11.7384,
       lon: 78.9639,
       tzone: 5.5,
-      ayanamsha: "KP"
+      ayanamsha: "KP",
+      place: ''
     }
   }
   componentDidMount() {
@@ -147,6 +148,14 @@ class Home extends Component {
     }
   }
 
+  locationSelected = (data) => {
+    this.setState({
+      lat: data.latLng.lat,
+      lon: data.latLng.lng,
+      place: data.address
+    });
+  }
+
   render() {
     const { data,
       majorDasha,
@@ -164,7 +173,9 @@ class Home extends Component {
             <input type="number" name="lat" className="pt_input w10" value={this.state.lat} onChange={(event) => this.handleInput(event)} />
             <input type="number" name="lon" className="pt_input w10" value={this.state.lon} onChange={(event) => this.handleInput(event)} />
             <input type="text" name="tzone" className="pt_input w10" value={this.state.tzone} onChange={(event) => this.handleInput(event)} />
-            <input type="text" name="place" className="pt_input w15" value="Place"  />
+            <LocationSearchInput address={this.state.place}
+              className="places-input"
+               locationSelected={this.locationSelected} placeholder="Location"/>
             <button className="pt_button w100p" onClick={this.handleSearch}>Search</button>
           </div>
         </div>

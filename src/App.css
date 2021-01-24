@@ -4,7 +4,6 @@ body{
 }
 .row_block{
   padding: 0px 20px;
-  overflow: hidden;
   margin: 20px 0px;
 }
 .pt_search{
@@ -213,4 +212,16 @@ table{
 }
 .bava_no{
   text-align: center;
+}
+
+.autocomplete-dropdown-container {
+  position: absolute;
+  background-color: white;
+  width: 100%;
+  z-index: 99999;
+}
+
+.location-search-input {
+  margin-left: 10px;
+  margin-top: 8px;
 }
