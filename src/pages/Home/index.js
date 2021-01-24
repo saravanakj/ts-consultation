@@ -184,7 +184,7 @@ class Home extends Component {
               className="places-input"
                locationSelected={this.locationSelected} 
                onReceiveOtherDetails={this.onReceiveLocationOtherDetails}/>
-            <button className="pt_button w100p" onClick={this.handleSearch}>Search</button>
+            <button className="pt_button w100p" onClick={this.handleSearch}>Chart</button>
           </div>
         </div>
         <div className="table_container">
@@ -193,7 +193,7 @@ class Home extends Component {
               <thead className="table_header">
                 <tr>
                   <td className="bava_no">B#</td>
-                  <td>Hidden</td>
+                  <td></td>
                   <td>SL</td>
                   <td>DAL</td>
                   <td>BHL</td>
@@ -250,11 +250,11 @@ class Home extends Component {
           <div className="pt_table table_split float_right">
           <div className="pt_maincard bava_table_container">
 
-            <DisplayDhasa data={majorDasha} title="DasaData" handleClick={this.handleDasha} keyName="dasaData" />
-            <DisplayDhasa data={subDasha} title="BukthiData" handleClick={this.handleDasha} keyName="bukthiData" />
-            <DisplayDhasa data={subDasha2} title="AnthraData" handleClick={this.handleDasha} keyName="anthraData" />
-            <DisplayDhasa data={subDasha3} title="SukshmaData" handleClick={this.handleDasha} keyName="sukshmaData" />
-            <DisplayDhasa data={subDasha4} title="AdhisukshmaData" handleClick={this.handleDasha} keyName="adhisukshmaData" />
+            <DisplayDhasa data={majorDasha} title="Dasa Table" handleClick={this.handleDasha} keyName="dasaData" />
+            <DisplayDhasa data={subDasha} title="Bukthi Table" handleClick={this.handleDasha} keyName="bukthiData" />
+            <DisplayDhasa data={subDasha2} title="Anthra Table" handleClick={this.handleDasha} keyName="anthraData" />
+            <DisplayDhasa data={subDasha3} title="Sukshma Table" handleClick={this.handleDasha} keyName="sukshmaData" />
+            <DisplayDhasa data={subDasha4} title="Adhisukshma Table" handleClick={this.handleDasha} keyName="adhisukshmaData" />
           </div>
             
 
