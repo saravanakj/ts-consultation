@@ -198,7 +198,7 @@ class Home extends Component {
                   <td>DAL</td>
                   <td>BHL</td>
                   <td>ANL</td>
-                  <td>F.Degree</td>
+                  <td>Deg</td>
                   <td>PL</td>
                   <td>PSL</td>
                   <td>NL</td>
