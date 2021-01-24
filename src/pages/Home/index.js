@@ -230,7 +230,7 @@ class Home extends Component {
                     {c.bukthiLord !==undefined&& <td className="highlight">{c.bukthiLord.substring(0,2)}</td>}
                     {c.antharaLord ===undefined&&<td>{""}</td>}
                     {c.antharaLord !==undefined&&<td className="highlight">{c.antharaLord.substring(0,2)}</td>}
-                    <td>{c.degree.toFixed(3)||""}</td>
+                    <td>{c.degree.toFixed(2)||""}</td>
                     {c.planet ===undefined &&<td className="highlight">{c.planet||""}</td>}
                     {c.planet !==undefined &&<td className="highlight">{c.planet.substring(0,2)}</td>}
                     {c.planetSignLord ===undefined &&<td className="dull_part">{c.planetSignLord||""}</td>}
