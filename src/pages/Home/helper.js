@@ -69,7 +69,10 @@ export const locateIndex = (chart, planetDegree) => {
         located = idx;
       }
     } else {
-      if(planetDegree <= nextDegree) {
+      if(currentDegree <= planetDegree && planetDegree > nextDegree) {
+        located = idx;
+      }
+      else if(planetDegree <= nextDegree) {
         located = idx;
       }
     }
