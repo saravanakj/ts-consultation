@@ -155,6 +155,11 @@ table{
  h1{
   
  }
+ .pl_card{
+  border-radius: 1px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+ }
  .pt_card{
   width: calc(33% - 20px);
   box-sizing: border-box;

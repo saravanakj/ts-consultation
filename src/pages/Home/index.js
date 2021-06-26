@@ -14,7 +14,7 @@ import {
   subDasha3,
   subDasha4
 } from "../../api_helper/slice/homeSlice";
-import { prepareChartData } from "./helper"
+import { prepareChartData,getPPTable } from "./helper"
 import "../../App.css"
 import { LocationSearchInput } from "../../components/LocationSearchInput/LocationSearchInput";
 
@@ -52,6 +52,34 @@ const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
   )
 }
 
+const DisplayPPList = ({ppList}) =>{
+  return (
+    ppList.length > 0
+      ? (<div className="pl_card">
+        <div className="pt_smallcard_cotaier">
+          <table>
+            <tr className={`pt_smallcard`}>
+                <th className="dasa_cell w20">House#</th>
+                <th className="dasa_cell w20">Count</th>
+                <th className="dasa_cell w40">PP</th>
+                <th className="dasa_cell w40">PL</th>
+            </tr>
+            {ppList.map(i => {
+              return (
+                <tr className={`pt_smallcard`}>
+                  <td className="dasa_cell w20">{i.houseId}</td>
+                  <td className="dasa_cell w20">{i.count}</td>
+                  <td className="dasa_cell w40">{i.pp.join(',')}</td>
+                  <td className="dasa_cell w40">{i.pl.join(',')}</td>
+                </tr>
+              )
+            })}
+          </table>               
+         </div>
+      </div>)
+      : null
+  )
+} 
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -170,6 +198,7 @@ class Home extends Component {
 
   render() {
     const { data,
+      ppList,
       majorDasha,
       subDasha,
       subDasha2,
@@ -254,15 +283,13 @@ class Home extends Component {
           </div>
           <div className="pt_table table_split float_right">
           <div className="pt_maincard bava_table_container">
-
+            <DisplayPPList ppList={ppList} />
             <DisplayDhasa data={majorDasha} title="Dasa Table" handleClick={this.handleDasha} keyName="dasaData" />
             <DisplayDhasa data={subDasha} title="Bukthi Table" handleClick={this.handleDasha} keyName="bukthiData" />
             <DisplayDhasa data={subDasha2} title="Anthra Table" handleClick={this.handleDasha} keyName="anthraData" />
             <DisplayDhasa data={subDasha3} title="Sukshma Table" handleClick={this.handleDasha} keyName="sukshmaData" />
             <DisplayDhasa data={subDasha4} title="Adhisukshma Table" handleClick={this.handleDasha} keyName="adhisukshmaData" />
           </div>
-            
-
           </div>
         </div>
         
@@ -278,9 +305,12 @@ function mapStateToProps(state) {
   const { search, majorDasha, subDasha, subDasha2, subDasha3, subDasha4 } = home
   const { houses, planets } = search || ""
   const chart = (houses && planets) ? prepareChartData(houses, planets) : [];
+  const ppList = getPPTable(chart);
+
   return {
     home,
     data: chart,
+    ppList,
     majorDasha,
     subDasha,
     subDasha2,

@@ -59,6 +59,67 @@ export const prepareChartData = (houses, planets) => {
   return chart;
 }
 
+const calculatePP = (bhavas) => {
+  let PP = [];
+  let Obj={};
+  for (let elem of bhavas) {
+    if(elem.houseId)
+    { 
+        PP.push(Obj);
+        Obj={};  
+
+        Obj[elem.dhasaLord] = true;
+        Obj[elem.bukthiLord] = true;
+        Obj[elem.antharaLord] = true;
+    }
+    else {
+        Obj[elem.planet] = true;
+    }
+  }
+  PP.push(Obj);
+  PP.shift();
+
+  return PP;
+}
+
+const calculatePL = (bhavas, ppList) => {
+  let plList = [];
+  let bhavaPlanets = bhavas.filter(b => b.planet != undefined);
+  ppList.forEach(pp => {
+    let pList = bhavaPlanets.map(bp => {
+        return (
+          pp[bp.planet] == true ||
+          pp[bp.planetNakLord] == true ||
+          pp[bp.planetSubLord] == true ||
+          pp[bp.planetSubSubLord] == true
+        ) ? bp.planet : "";
+      })
+      .filter((x) => x != "");
+
+    plList.push(pList);
+  });
+  return plList;
+}
+
+export const getPPTable = (bhavas) => {
+  let ppList = [];
+  if(bhavas.length > 0) {
+    let PP = calculatePP(bhavas);
+    let PL = calculatePL(bhavas, PP);
+    for (let i = 1; i <= 12; i++) {
+      let y = i - 1;
+      let PParray = Object.keys(PP[y]);
+      ppList.push({
+        houseId:i,
+        count: PL[y].length,
+        pp: PParray.map(p => p.substring(0,2)),
+        pl: PL[y].map(p => p.substring(0,2))
+      });
+    }
+  }
+  return ppList;
+}
+
 export const locateIndex = (chart, planetDegree) => {
   let located = chart.length;
   for(let idx = 0; idx < chart.length-1;idx++) {
