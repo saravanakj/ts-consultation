@@ -57,7 +57,7 @@ const DisplayPPList = ({ppList}) =>{
     ppList.length > 0
       ? (<div className="pl_card">
         <div className="pt_smallcard_cotaier">
-          <table>
+          <table className="table">
             <tr className={`pt_smallcard`}>
                 <th className="dasa_cell w20">House#</th>
                 <th className="dasa_cell w20">Count</th>
@@ -67,10 +67,10 @@ const DisplayPPList = ({ppList}) =>{
             {ppList.map(i => {
               return (
                 <tr className={`pt_smallcard`}>
-                  <td className="dasa_cell w20">{i.houseId}</td>
-                  <td className="dasa_cell w20">{i.count}</td>
-                  <td className="dasa_cell w40">{i.pp.join(',')}</td>
-                  <td className="dasa_cell w40">{i.pl.join(',')}</td>
+                  <td className={`pp_cell w20 ${i.count > 6 ? "highlight" : ""}`}>{i.houseId}</td>
+                  <td className="pp_cell w20">{i.count}</td>
+                  <td className="pp_cell w40">{i.pp.join(', ')}</td>
+                  <td className="pp_cell w40">{i.pl.join(', ')}</td>
                 </tr>
               )
             })}

@@ -231,3 +231,12 @@ table{
   margin-left: 10px;
   margin-top: 8px;
 }
+
+.pp_cell{
+  display: table-cell;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  white-space: nowrap;
+  border-right: 1px dotted #ddd;
+  font-size: 14px;
+}
