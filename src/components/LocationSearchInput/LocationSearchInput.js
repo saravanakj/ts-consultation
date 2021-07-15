@@ -45,6 +45,12 @@ export class LocationSearchInput extends React.Component {
     }
 
   };
+
+  componentWillReceiveProps(props){
+    this.setState({
+      address: props.address
+    })
+  }
  
   render() {
     return (

@@ -166,6 +166,12 @@ export function subDasha4(payload, query) {
     }
 }
 
+export function postCustomerData(payload) {
+    return dispatch => {
+        homeApi.postData(payload)
+    }
+}
+
 export function clearDashaAction() {
     return (dispatch) => {
         dispatch(subDashaClear())

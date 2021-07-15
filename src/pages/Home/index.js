@@ -12,11 +12,13 @@ import {
   subDasha,
   subDasha2,
   subDasha3,
-  subDasha4
+  subDasha4,
+  postCustomerData
 } from "../../api_helper/slice/homeSlice";
-import { prepareChartData,getPPTable } from "./helper"
+import { prepareChartData, getPPTable } from "./helper"
 import "../../App.css"
 import { LocationSearchInput } from "../../components/LocationSearchInput/LocationSearchInput";
+import { db } from '../../firebase/firebaseConfig'
 
 const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
   const [selecInd, setSelecInd] = useState(null)
@@ -25,44 +27,44 @@ const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
       ? (<div className="pt_card">
         <h1>{title}</h1>
         <div className="pt_smallcard_cotaier">
-        <table>
-        {data.map(i => {
-          return (
-            
-             
-                
-                  <tr className={`pt_smallcard ${selecInd === i ? "selected_card" : ""}`} onClick={() => {
-                handleClick(i.planet, keyName)
-                setSelecInd(i)
-              }}>
-                    <td className="dasa_cell w20">{i.planet.substring(0,2)}</td>
-                    <td className="dasa_cell w40">{i.start.substring(0,10)}</td>
-                    <td className="dasa_cell w40">{i.end.substring(0,10)}</td>
-                  </tr>
-                
-              
-           
-          )
-        })}
-        </table>
-               
-         </div>
+          <table>
+            {data.map(i => {
+              return (
+
+
+
+                <tr className={`pt_smallcard ${selecInd === i ? "selected_card" : ""}`} onClick={() => {
+                  handleClick(i.planet, keyName)
+                  setSelecInd(i)
+                }}>
+                  <td className="dasa_cell w20">{i.planet.substring(0, 2)}</td>
+                  <td className="dasa_cell w40">{i.start.substring(0, 10)}</td>
+                  <td className="dasa_cell w40">{i.end.substring(0, 10)}</td>
+                </tr>
+
+
+
+              )
+            })}
+          </table>
+
+        </div>
       </div>)
       : null
   )
 }
 
-const DisplayPPList = ({ppList}) =>{
+const DisplayPPList = ({ ppList }) => {
   return (
     ppList.length > 0
       ? (<div className="pl_card">
         <div className="pt_smallcard_cotaier">
           <table className="table">
             <tr className={`pt_smallcard`}>
-                <th className="dasa_cell w20">House#</th>
-                <th className="dasa_cell w20">Count</th>
-                <th className="dasa_cell w40">PP</th>
-                <th className="dasa_cell w40">PL</th>
+              <th className="dasa_cell w20">House#</th>
+              <th className="dasa_cell w20">Count</th>
+              <th className="dasa_cell w40">PP</th>
+              <th className="dasa_cell w40">PL</th>
             </tr>
             {ppList.map(i => {
               return (
@@ -74,68 +76,154 @@ const DisplayPPList = ({ppList}) =>{
                 </tr>
               )
             })}
-          </table>               
-         </div>
+          </table>
+        </div>
       </div>)
       : null
   )
-} 
+}
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
-      dasha: {},
-      date: '1981-10-14',
-      time: '12:40:45',
-      day: 14,
-      month: 10,
-      year: 1981,
-      hour: 12,
-      min: 40,
-      seconds: 45,
-      lat: 11.7384,
-      lon: 78.9639,
-      tzone: 5.5,
-      ayanamsha: "KP",
-      place: ''
+      date: '',
+      time: '',
+      day: null,
+      month: null,
+      year: null,
+      hour: null,
+      min: null,
+      seconds: null,
+      lat: null,
+      lon: null,
+      tzone: null,
+      ayanamsha: '',
+      place: '',
     }
   }
-  componentDidMount() {
+  componentWillMount() {
+    console.log(this.props.location.state);
+
+    window.addEventListener("beforeunload", () => {
+      this.props.history.replace('', null);
+    })
+
+    if (this.props && this.props.location && this.props.location.state && this.props.location.state.selectedRow) {
+
+      db.collection('customer').doc(`${this.props.location.state.selectedRow}`).onSnapshot(querySnapshot => {
+
+          const customerResponseData = querySnapshot && querySnapshot.data();
+
+          this.setState({
+            date: customerResponseData.date,
+            time: customerResponseData.time,
+            day: customerResponseData.day,
+            month: customerResponseData.month,
+            year: customerResponseData.year,
+            hour: customerResponseData.hour,
+            min: customerResponseData.min,
+            seconds: customerResponseData.seconds,
+            lat: customerResponseData.lat,
+            lon: customerResponseData.lon,
+            tzone: customerResponseData.tzone,
+            ayanamsha: customerResponseData.ayanamsha,
+            place: customerResponseData.place,
+          }, () =>{
+            this.handleSearch();
+          })
+      })
+    }
+
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("beforeunload", () => { });
   }
 
   handleInput = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value,
-    })
+    switch (event.target.name) {
+      case 'date':
+        const splitDate = event.target.value.split("-");
+        this.setState({
+          ...this.state,
+          [event.target.name]: event.target.value,
+          year: parseInt(splitDate[0]),
+          month: parseInt(splitDate[1]),
+          day: parseInt(splitDate[2])
+        })
+        break;
+      case 'time':
+        const splitTime = event.target.value.split(":");
+        this.setState({
+          ...this.state,
+          [event.target.name]: event.target.value,
+          hour: parseInt(splitTime[0]),
+          min: parseInt(splitTime[1]),
+          seconds: parseInt(splitTime[2])
+        })
+        break;
+
+      case 'lat':
+        this.setState({
+          ...this.state,
+          lat: parseFloat(event.target.value)
+        })
+        break;
+
+      case 'lon':
+        this.setState({
+          ...this.state,
+          lat: parseFloat(event.target.value)
+        })
+        break;
+      case 'seconds':
+        this.setState({
+          ...this.state,
+          seconds: parseInt(event.target.value)
+        })
+        break;
+      default:
+        this.setState({
+          [event.target.name]: event.target.value
+        })
+
+    }
   }
+
+  saveHandler = () => {
+    const { dispatch } = this.props
+
+    if (this.props.data) {
+
+      const { year, month, day, hour, min, seconds, lat, lon, ayanamsha, tzone, date, time, place } = this.state;
+
+      const customerData = { year, month, day, hour, min, seconds, lat, lon, ayanamsha, tzone, date, time, place };
+
+      const details = {
+        data: customerData,
+        chartDetails: {
+          chart: this.props.data,
+          bhavaChart: this.props.ppList
+        }
+      }
+
+      dispatch(postCustomerData(details))
+
+    }
+  }
+
+  viewHandler = () => {
+    this.props.history.push('/customer-list')
+  }
+
 
   handleSearch = () => {
     const { dispatch } = this.props
-    const { ayanamsha, lat, lon, tzone, seconds, date, time } = this.state
-    const payload = {
-      ayanamsha,
-      lat: parseFloat(lat),
-      lon: parseFloat(lon),
-      tzone: tzone,
-      seconds: parseInt(seconds),
-    }
-    if (date) {
-      const splitDate = date.split("-")
-      payload.year = parseInt(splitDate[0])
-      payload.month = parseInt(splitDate[1])
-      payload.day = parseInt(splitDate[2])
-    }
 
-    if (time) {
-      const splitTime = time.split(":")
-      payload.hour = parseInt(splitTime[0])
-      payload.min = parseInt(splitTime[1])
-      payload.seconds = parseInt(splitTime[2])
-    }
-    this.setState({
-      payload: payload
-    })
+    const { year, month, day, hour, min, seconds, lat, lon, ayanamsha, tzone, date, time } = this.state;
+
+    const payload = { year, month, day, hour, min, seconds, lat, lon, ayanamsha, tzone };
+
     if (ayanamsha && lat && lon && tzone && seconds && date && time) {
       dispatch(search(payload));
       dispatch(majorDasha(payload))
@@ -190,7 +278,7 @@ class Home extends Component {
   }
 
   onReceiveLocationOtherDetails = (data) => {
-    let tzone= data.offset ? data.offset/60 : this.state.tzone;
+    let tzone = data.offset ? data.offset / 60 : this.state.tzone;
     this.setState({
       tzone: tzone
     });
@@ -208,7 +296,7 @@ class Home extends Component {
       <div>
         <div className="row_block">
           <div className="pt_search" >
-            <input className="pt_input search_txt_box w10" name="ayanamsha" type="text" placeholder="Name" onChange={(event) => this.handleInput(event)} />
+            <input className="pt_input search_txt_box w10" name="ayanamsha" type="text" placeholder="Name" value={this.state.ayanamsha} onChange={(event) => this.handleInput(event)} />
             <input className="pt_input w15" name="date" type="date" value={this.state.date} onChange={(event) => this.handleInput(event)} />
             <input type="text" name="time" className="pt_input w15" value={this.state.time} onChange={(event) => this.handleInput(event)} />
             <input type="number" name="lat" className="pt_input w10" value={this.state.lat} onChange={(event) => this.handleInput(event)} />
@@ -216,9 +304,13 @@ class Home extends Component {
             <input type="text" name="tzone" className="pt_input w10" value={this.state.tzone} onChange={(event) => this.handleInput(event)} />
             <LocationSearchInput address={this.state.place}
               className="places-input"
-               locationSelected={this.locationSelected} 
-               onReceiveOtherDetails={this.onReceiveLocationOtherDetails}/>
+              locationSelected={this.locationSelected}
+              onReceiveOtherDetails={this.onReceiveLocationOtherDetails}
+            />
             <button className="pt_button w100p" onClick={this.handleSearch}>Chart</button>
+            <button className="pt_button w100p" onClick={this.saveHandler} >Save</button>
+            <button className="pt_button w100p" onClick={this.viewHandler}>View</button>
+
           </div>
         </div>
         <div className="table_container">
@@ -238,43 +330,43 @@ class Home extends Component {
                   <td>NL</td>
                   <td>PSU</td>
                   <td>SSL</td>
-            
+
                 </tr>
               </thead>
               <tbody>
-                {data.map((c, idx) => (
+                {data && data.length > 0 && data.map((c, idx) => (
                   <tr key={`data${idx}`}>
                     <td className="bava_no">{c.houseId}</td>
-                  
+
                     <td className="dull_part1">
-                        <Fragment>
-                          <i class="material-icons"  style={{cursor:'pointer'}}data-tip data-for={`planetSignNametooltip${idx}`}>
-                            visibility_off</i>
-                          <ReactTooltip place="top" type="dark" id={`planetSignNametooltip${idx}`}>
-                            PSN:{c.planetSignName||"-"}&nbsp;,DN:{c.houseNakshathraName||"-"},&nbsp;HSN:{c.houseSignName||"-"},&nbsp;SUKL:{c.sukLord||"-"},&nbsp;NN:{c.planetNakName||"-"},&nbsp;SSS:{c.planetSubSubSubLord||"-"}
-                          </ReactTooltip>
-                        </Fragment>
+                      <Fragment>
+                        <i class="material-icons" style={{ cursor: 'pointer' }} data-tip data-for={`planetSignNametooltip${idx}`}>
+                          visibility_off</i>
+                        <ReactTooltip place="top" type="dark" id={`planetSignNametooltip${idx}`}>
+                          PSN:{c.planetSignName || "-"}&nbsp;,DN:{c.houseNakshathraName || "-"},&nbsp;HSN:{c.houseSignName || "-"},&nbsp;SUKL:{c.sukLord || "-"},&nbsp;NN:{c.planetNakName || "-"},&nbsp;SSS:{c.planetSubSubSubLord || "-"}
+                        </ReactTooltip>
+                      </Fragment>
                     </td>
-                    
-                    {c.houseSignLord===undefined && <td>{""}</td>}
-                    {c.houseSignLord!==undefined && <td className="dull_part">{c.houseSignLord.substring(0,2)}</td>}
-                    {c.dhasaLord===undefined && <td className="highlight">{""}</td>}
-                    {c.dhasaLord!==undefined && <td className="highlight">{c.dhasaLord.substring(0,2)}</td>}
-                    {c.bukthiLord ===undefined&& <td>{""}</td>}
-                    {c.bukthiLord !==undefined&& <td className="highlight">{c.bukthiLord.substring(0,2)}</td>}
-                    {c.antharaLord ===undefined&&<td>{""}</td>}
-                    {c.antharaLord !==undefined&&<td className="highlight">{c.antharaLord.substring(0,2)}</td>}
-                    <td>{c.degree.toFixed(2)||""}</td>
-                    {c.planet ===undefined &&<td className="highlight">{c.planet||""}</td>}
-                    {c.planet !==undefined &&<td className="highlight">{c.planet.substring(0,2)}</td>}
-                    {c.planetSignLord ===undefined &&<td className="dull_part">{c.planetSignLord||""}</td>}
-                    {c.planetSignLord !==undefined &&<td className="dull_part">{c.planetSignLord.substring(0,2)}</td>}
-                    {c.planetNakLord ===undefined&&<td>{""}</td>}
-                    {c.planetNakLord !==undefined&&<td className="highlight">{c.planetNakLord.substring(0,2)}</td>}
-                    {c.planetSubLord ===undefined&&<td>{""}</td>}
-                    {c.planetSubLord !==undefined&&<td className="highlight">{c.planetSubLord.substring(0,2)}</td>}
-                    {c.planetSubSubLord ===undefined&&<td>{""}</td>}
-                    {c.planetSubSubLord !==undefined&&<td className="highlight">{c.planetSubSubLord.substring(0,2)}</td>}
+
+                    {c.houseSignLord === undefined && <td>{""}</td>}
+                    {c.houseSignLord !== undefined && <td className="dull_part">{c.houseSignLord.substring(0, 2)}</td>}
+                    {c.dhasaLord === undefined && <td className="highlight">{""}</td>}
+                    {c.dhasaLord !== undefined && <td className="highlight">{c.dhasaLord.substring(0, 2)}</td>}
+                    {c.bukthiLord === undefined && <td>{""}</td>}
+                    {c.bukthiLord !== undefined && <td className="highlight">{c.bukthiLord.substring(0, 2)}</td>}
+                    {c.antharaLord === undefined && <td>{""}</td>}
+                    {c.antharaLord !== undefined && <td className="highlight">{c.antharaLord.substring(0, 2)}</td>}
+                    <td>{c.degree.toFixed(2) || ""}</td>
+                    {c.planet === undefined && <td className="highlight">{c.planet || ""}</td>}
+                    {c.planet !== undefined && <td className="highlight">{c.planet.substring(0, 2)}</td>}
+                    {c.planetSignLord === undefined && <td className="dull_part">{c.planetSignLord || ""}</td>}
+                    {c.planetSignLord !== undefined && <td className="dull_part">{c.planetSignLord.substring(0, 2)}</td>}
+                    {c.planetNakLord === undefined && <td>{""}</td>}
+                    {c.planetNakLord !== undefined && <td className="highlight">{c.planetNakLord.substring(0, 2)}</td>}
+                    {c.planetSubLord === undefined && <td>{""}</td>}
+                    {c.planetSubLord !== undefined && <td className="highlight">{c.planetSubLord.substring(0, 2)}</td>}
+                    {c.planetSubSubLord === undefined && <td>{""}</td>}
+                    {c.planetSubSubLord !== undefined && <td className="highlight">{c.planetSubSubLord.substring(0, 2)}</td>}
                   </tr>
                 ))}
               </tbody>
@@ -282,17 +374,17 @@ class Home extends Component {
 
           </div>
           <div className="pt_table table_split float_right">
-          <div className="pt_maincard bava_table_container">
-            <DisplayPPList ppList={ppList} />
-            <DisplayDhasa data={majorDasha} title="Dasa Table" handleClick={this.handleDasha} keyName="dasaData" />
-            <DisplayDhasa data={subDasha} title="Bukthi Table" handleClick={this.handleDasha} keyName="bukthiData" />
-            <DisplayDhasa data={subDasha2} title="Anthra Table" handleClick={this.handleDasha} keyName="anthraData" />
-            <DisplayDhasa data={subDasha3} title="Sukshma Table" handleClick={this.handleDasha} keyName="sukshmaData" />
-            <DisplayDhasa data={subDasha4} title="Adhisukshma Table" handleClick={this.handleDasha} keyName="adhisukshmaData" />
-          </div>
+            <div className="pt_maincard bava_table_container">
+              <DisplayPPList ppList={ppList} />
+              <DisplayDhasa data={majorDasha} title="Dasa Table" handleClick={this.handleDasha} keyName="dasaData" />
+              <DisplayDhasa data={subDasha} title="Bukthi Table" handleClick={this.handleDasha} keyName="bukthiData" />
+              <DisplayDhasa data={subDasha2} title="Anthra Table" handleClick={this.handleDasha} keyName="anthraData" />
+              <DisplayDhasa data={subDasha3} title="Sukshma Table" handleClick={this.handleDasha} keyName="sukshmaData" />
+              <DisplayDhasa data={subDasha4} title="Adhisukshma Table" handleClick={this.handleDasha} keyName="adhisukshmaData" />
+            </div>
           </div>
         </div>
-        
+
       </div>
 
     )

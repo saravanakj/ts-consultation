@@ -6,7 +6,8 @@ export const  homeApi ={
     subDasha,
     subDasha2,
     subDasha3,
-    subDasha4
+    subDasha4,
+    postData
 }
 
 function search(payload){
@@ -31,5 +32,9 @@ function subDasha3(payload,query){
 
 function subDasha4(payload,query){
     return Client.ApiCall("POST",`/v1/sub_sub_sub_sub_vdasha/${query}`,payload)
+}
+
+function postData(payload){
+    return Client.firebaseApiCall("POST",payload)
 }
 
