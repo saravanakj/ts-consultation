@@ -172,6 +172,12 @@ export function postCustomerData(payload) {
     }
 }
 
+export function updateCustomerData(payload, docId) {
+    return dispatch => {
+        homeApi.updateData(payload, docId);
+    }
+}
+
 export function clearDashaAction() {
     return (dispatch) => {
         dispatch(subDashaClear())

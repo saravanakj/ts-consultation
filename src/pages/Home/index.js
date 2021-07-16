@@ -13,12 +13,14 @@ import {
   subDasha2,
   subDasha3,
   subDasha4,
-  postCustomerData
+  postCustomerData,
+  updateCustomerData,
 } from "../../api_helper/slice/homeSlice";
 import { prepareChartData, getPPTable } from "./helper"
 import "../../App.css"
 import { LocationSearchInput } from "../../components/LocationSearchInput/LocationSearchInput";
 import { db } from '../../firebase/firebaseConfig'
+import Alert from '@material-ui/lab/Alert';
 
 const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
   const [selecInd, setSelecInd] = useState(null)
@@ -99,10 +101,10 @@ class Home extends Component {
       tzone: null,
       ayanamsha: '',
       place: '',
+      showAlert: false,
     }
   }
   componentWillMount() {
-    console.log(this.props.location.state);
 
     window.addEventListener("beforeunload", () => {
       this.props.history.replace('', null);
@@ -112,25 +114,25 @@ class Home extends Component {
 
       db.collection('customer').doc(`${this.props.location.state.selectedRow}`).onSnapshot(querySnapshot => {
 
-          const customerResponseData = querySnapshot && querySnapshot.data();
+        const customerResponseData = querySnapshot && querySnapshot.data();
 
-          this.setState({
-            date: customerResponseData.date,
-            time: customerResponseData.time,
-            day: customerResponseData.day,
-            month: customerResponseData.month,
-            year: customerResponseData.year,
-            hour: customerResponseData.hour,
-            min: customerResponseData.min,
-            seconds: customerResponseData.seconds,
-            lat: customerResponseData.lat,
-            lon: customerResponseData.lon,
-            tzone: customerResponseData.tzone,
-            ayanamsha: customerResponseData.ayanamsha,
-            place: customerResponseData.place,
-          }, () =>{
-            this.handleSearch();
-          })
+        this.setState({
+          date: customerResponseData.date,
+          time: customerResponseData.time,
+          day: customerResponseData.day,
+          month: customerResponseData.month,
+          year: customerResponseData.year,
+          hour: customerResponseData.hour,
+          min: customerResponseData.min,
+          seconds: customerResponseData.seconds,
+          lat: customerResponseData.lat,
+          lon: customerResponseData.lon,
+          tzone: customerResponseData.tzone,
+          ayanamsha: customerResponseData.ayanamsha,
+          place: customerResponseData.place,
+        }, () => {
+          this.handleSearch();
+        })
       })
     }
 
@@ -190,8 +192,8 @@ class Home extends Component {
     }
   }
 
-  saveHandler = () => {
-    const { dispatch } = this.props
+  saveUpdateHandler = () => {
+    const { dispatch } = this.props;
 
     if (this.props.data) {
 
@@ -207,7 +209,22 @@ class Home extends Component {
         }
       }
 
-      dispatch(postCustomerData(details))
+      if (this.props && this.props.location && this.props.location.state && this.props.location.state.selectedRow) {
+        dispatch(updateCustomerData(details, this.props.location.state.selectedRow));
+        this.props.history.push('/customer-list')
+      }
+      else {
+        dispatch(postCustomerData(details));
+        this.setState({
+          showAlert: true,
+        })
+      }
+
+      setTimeout(() => {
+        this.setState({
+          showAlert: false
+        })
+      }, 4000);
 
     }
   }
@@ -285,6 +302,7 @@ class Home extends Component {
   }
 
   render() {
+
     const { data,
       ppList,
       majorDasha,
@@ -292,6 +310,7 @@ class Home extends Component {
       subDasha2,
       subDasha3,
       subDasha4 } = this.props;
+
     return (
       <div>
         <div className="row_block">
@@ -308,7 +327,10 @@ class Home extends Component {
               onReceiveOtherDetails={this.onReceiveLocationOtherDetails}
             />
             <button className="pt_button w100p" onClick={this.handleSearch}>Chart</button>
-            <button className="pt_button w100p" onClick={this.saveHandler} >Save</button>
+            <button className="pt_button w100p" onClick={this.saveUpdateHandler} disabled={this.props.data.length
+              ? false : true}> {
+                this.props && this.props.location && this.props.location.state &&
+                  this.props.location.state.selectedRow ? 'Update' : 'Save'}</button>
             <button className="pt_button w100p" onClick={this.viewHandler}>View</button>
 
           </div>
@@ -384,6 +406,17 @@ class Home extends Component {
             </div>
           </div>
         </div>
+
+        {
+          this.state.showAlert &&
+          <div className="alertWrapper">
+            <Alert severity="success" style={{ backgroundColor: 'rgb(106, 90, 205)', color: 'white' }}>
+              {this.props && this.props.location && this.props.location.state &&
+                this.props.location.state.selectedRow ? 'Data updated successfully!' : 'Data saved successfully!'}
+            </Alert>
+          </div>
+
+        }
 
       </div>
 

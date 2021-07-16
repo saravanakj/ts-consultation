@@ -42,7 +42,7 @@ function ApiCall(
     return fetch(`${url}${endpoint}`, request).then(response);
 }
 
-function firebaseApiCall(method, payload){
+function firebaseApiCall(method, payload, docId=''){
     switch(method) {
         case 'POST':
             return db.collection('customer').add(payload.data)
@@ -53,6 +53,12 @@ function firebaseApiCall(method, payload){
                     .catch((error) => console.log("Error in", error))
             })
 
+        case 'PUT':
+            return db.collection('customer').doc(docId).set(payload.data).then(res =>{
+                db.collection('customerCharts').add(payload.chartDetails)
+                    .then(() => console.log("Chart data Added!!"))
+                    .catch((error) => console.log("Error in", error))
+            })
         case 'GET':
             return db.collection('customer').onSnapshot((snapshot) => snapshot.docs.forEach(item => console.log(item.data()))) 
         default :
