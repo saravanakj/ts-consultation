@@ -19,8 +19,15 @@ import {
 import { prepareChartData, getPPTable, getPlanetTable } from "./helper";
 import "../../App.css";
 import { LocationSearchInput } from "../../components/LocationSearchInput/LocationSearchInput";
-import { db } from "../../firebase/firebaseConfig";
-import Alert from "@material-ui/lab/Alert";
+import { db } from '../../firebase/firebaseConfig'
+import Alert from '@material-ui/lab/Alert';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import Tooltip from '@material-ui/core/Tooltip';
+import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
   const [selecInd, setSelecInd] = useState(null);
@@ -113,14 +120,15 @@ class Home extends Component {
       hour: null,
       min: null,
       seconds: null,
-      lat: null,
-      lon: null,
+      lat: 0,
+      lon: 0,
       tzone: null,
       ayanamsha: "",
       place: "",
       showAlert: false,
     };
   }
+
   componentWillMount() {
     window.addEventListener("beforeunload", () => {
       this.props.history.replace("", null);
@@ -214,6 +222,27 @@ class Home extends Component {
     }
   };
 
+
+  createKeywords = (name) => {
+    const keywordsArray = [];
+    let currentKeyword = '';
+    name.split('').forEach(letter => {
+      currentKeyword += letter.toLowerCase()
+      keywordsArray.push(currentKeyword)
+    });
+    return keywordsArray;
+  }
+
+  generateKeywords = (name, place) => {
+    const keywordName = this.createKeywords(name);
+    const keywordPlace = this.createKeywords(place);
+
+    return [
+      ...new Set([...keywordName, ...keywordPlace,])
+    ]
+  };
+
+
   saveUpdateHandler = () => {
     const { dispatch } = this.props;
 
@@ -252,6 +281,7 @@ class Home extends Component {
 
       const details = {
         data: customerData,
+        keywords: this.generateKeywords(ayanamsha, place),
         chartDetails: {
           chart: this.props.data,
           bhavaChart: this.props.ppList,
@@ -284,8 +314,9 @@ class Home extends Component {
   };
 
   viewHandler = () => {
-    this.props.history.push("/customer-list");
+    this.props.history.push('/customer-list')
   };
+
 
   handleSearch = () => {
     const { dispatch } = this.props;
@@ -389,80 +420,47 @@ class Home extends Component {
       subDasha4,
     } = this.props;
 
+      const CustomTooltip = withStyles({
+        tooltip:{
+          color: 'white',
+          background: 'black'
+        }
+      })(Tooltip)
+
     return (
       <div>
-        <div className="row_block">
-          <div className="pt_search">
-            <input
-              className="pt_input search_txt_box w10"
-              name="ayanamsha"
-              type="text"
-              placeholder="Name"
-              value={this.state.ayanamsha}
-              onChange={(event) => this.handleInput(event)}
-            />
-            <input
-              className="pt_input w15"
-              name="date"
-              type="date"
-              value={this.state.date}
-              onChange={(event) => this.handleInput(event)}
-            />
-            <input
-              type="text"
-              name="time"
-              className="pt_input w15"
-              value={this.state.time}
-              onChange={(event) => this.handleInput(event)}
-            />
-            <input
-              type="number"
-              name="lat"
-              className="pt_input w10"
-              value={this.state.lat}
-              onChange={(event) => this.handleInput(event)}
-            />
-            <input
-              type="number"
-              name="lon"
-              className="pt_input w10"
-              value={this.state.lon}
-              onChange={(event) => this.handleInput(event)}
-            />
-            <input
-              type="text"
-              name="tzone"
-              className="pt_input w10"
-              value={this.state.tzone}
-              onChange={(event) => this.handleInput(event)}
-            />
-            <LocationSearchInput
-              address={this.state.place}
+        
+        <Card style={{ width: '98%', margin: '25px auto', backgroundColor: '#E2E4EF', minHeight: 'calc(100vh - 50px)'}}>
+      <CardContent className="row_block">
+          <div className="pt_search" >
+            <input className="pt_input search_txt_box w10" name="ayanamsha" type="text" placeholder="Name" value={this.state.ayanamsha} onChange={(event) => this.handleInput(event)} />
+            <input className="pt_input w15" name="date" type="date" value={this.state.date} onChange={(event) => this.handleInput(event)} />
+            <input type="time" step='1' name="time" placeholder="Time" className="pt_input w15" value={this.state.time} onChange={(event) => this.handleInput(event)} />
+            <input type="hidden" name="lat" className="pt_input w10" value={this.state.lat} onChange={(event) => this.handleInput(event)} />
+            <input type="hidden" name="lon" className="pt_input w10" value={this.state.lon} onChange={(event) => this.handleInput(event)} />
+            <input type="text" name="tzone" placeholder="Time Zone" className="pt_input w10" value={this.state.tzone} onChange={(event) => this.handleInput(event)} />
+            <div style={{display: 'flex', alignItems: 'center'}}>
+
+            <CustomTooltip title={`lat:${this.state.lat.toFixed(4)} lon:${this.state.lon.toFixed(4)}`} arrow placement="top-start">
+                <LocationOnIcon />
+            </CustomTooltip>
+
+            <LocationSearchInput address={this.state.place}
               className="places-input"
               locationSelected={this.locationSelected}
               onReceiveOtherDetails={this.onReceiveLocationOtherDetails}
             />
-            <button className="pt_button w100p" onClick={this.handleSearch}>
-              Chart
-            </button>
-            <button
-              className="pt_button w100p"
-              onClick={this.saveUpdateHandler}
-              disabled={this.props.data.length ? false : true}
-            >
-              {" "}
-              {this.props &&
-              this.props.location &&
-              this.props.location.state &&
-              this.props.location.state.selectedRow
-                ? "Update"
-                : "Save"}
-            </button>
-            <button className="pt_button w100p" onClick={this.viewHandler}>
-              View
-            </button>
+                        </div>
+
+            <button className="pt_button w100p" onClick={this.handleSearch}>Generate</button>
+            <button className="pt_button w100p" onClick={this.saveUpdateHandler} disabled={this.props.data.length
+              ? false : true}>Save</button>
+            <button className="pt_button w100p" onClick={this.viewHandler}>Look Up</button>
+
           </div>
-        </div>
+      </CardContent>
+      <CardActions>
+        {data && data.length > 0 &&
         <div className="table_container">
           <div className="pt_table table_split float_left">
             <table className="table">
@@ -615,22 +613,21 @@ class Home extends Component {
             </div>
           </div>
         </div>
-
-        {this.state.showAlert && (
+  }
+        {
+          this.state.showAlert &&
           <div className="alertWrapper">
-            <Alert
-              severity="success"
-              style={{ backgroundColor: "rgb(106, 90, 205)", color: "white" }}
-            >
-              {this.props &&
-              this.props.location &&
-              this.props.location.state &&
-              this.props.location.state.selectedRow
-                ? "Data updated successfully!"
-                : "Data saved successfully!"}
+            <Alert severity="success" style={{ backgroundColor: 'rgb(106, 90, 205)', color: 'white' }}>
+              {this.props && this.props.location && this.props.location.state &&
+                this.props.location.state.selectedRow && 'Data saved successfully!'}
             </Alert>
           </div>
-        )}
+
+        }
+
+</CardActions>
+</Card>
+
       </div>
     );
   }
