@@ -175,7 +175,7 @@ export const getPlanetTable = (bhavas) => {
   PlanetTableArray.forEach((i, j = 0) => {
     i.planetName = planetList[j++];
   });
-  console.log(PlanetTableArray);
+  return PlanetTableArray;
 };
 
 export const getPPTable = (bhavas) => {

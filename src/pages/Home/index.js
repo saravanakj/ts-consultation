@@ -85,14 +85,47 @@ const DisplayPPList = ({ ppList }) => {
                 <td className="pp_cell w40">{i.pp.join(", ")}</td>
                 <td className="pp_cell w40">{i.loc.join(", ")}</td>
                 <td className="pp_cell w40">
-                  {" "}
-                  {planetStyleObjects.map((pl) => (
+                  {planetStyleObjects.map((pl, i) => (
                     <span style={pl.transparency ? opaqueStyle : normalStyle}>
                       {pl.name}
-                      {", "}
+                      {pl.name != "Ve" ? ", " : ""}
                     </span>
                   ))}
                 </td>
+              </tr>
+            );
+          })}
+        </table>
+      </div>
+    </div>
+  ) : null;
+};
+const DisplayPlanetList = ({ PlanetList }) => {
+  return PlanetList[0].primBh.length > 0 ||
+    PlanetList[1].primBh.length > 0 ||
+    PlanetList[2].primBh.length > 0 ||
+    PlanetList[3].primBh.length > 0 ||
+    PlanetList[4].primBh.length > 0 ||
+    PlanetList[5].primBh.length > 0 ||
+    PlanetList[6].primBh.length > 0 ||
+    PlanetList[7].primBh.length > 0 ||
+    PlanetList[8].primBh.length > 0 ? (
+    <div className="pl_card">
+      <div className="pt_smallcard_cotaier">
+        <table className="table">
+          <tr className={`pt_smallcard`}>
+            <th className="dasa_cell w20">Planet name</th>
+            <th className="dasa_cell w20">Primary Bh</th>
+            <th className="dasa_cell w40">Located Bh</th>
+            <th className="dasa_cell w40">Connected Bh</th>
+          </tr>
+          {PlanetList.map((i) => {
+            return (
+              <tr className={`pt_smallcard`}>
+                <td className={`pp_cell w20 `}>{i.planetName}</td>
+                <td className="pp_cell w20">{i.primBh.join(", ")}</td>
+                <td className="pp_cell w40">{i.locBh.join(", ")}</td>
+                <td className="pp_cell w40">{i.connectBh.join(", ")}</td>
               </tr>
             );
           })}
@@ -382,6 +415,7 @@ class Home extends Component {
     const {
       data,
       ppList,
+      PlanetList,
       majorDasha,
       subDasha,
       subDasha2,
@@ -582,6 +616,8 @@ class Home extends Component {
           <div className="pt_table table_split float_right">
             <div className="pt_maincard bava_table_container">
               <DisplayPPList ppList={ppList} />
+              <DisplayPlanetList PlanetList={PlanetList} />
+
               <DisplayDhasa
                 data={majorDasha}
                 title="Dasa Table"
@@ -643,12 +679,13 @@ function mapStateToProps(state) {
   const { houses, planets } = search || "";
   const chart = houses && planets ? prepareChartData(houses, planets) : [];
   const ppList = getPPTable(chart);
-  getPlanetTable(chart);
+  const PlanetList = getPlanetTable(chart);
 
   return {
     home,
     data: chart,
     ppList,
+    PlanetList,
     majorDasha,
     subDasha,
     subDasha2,
