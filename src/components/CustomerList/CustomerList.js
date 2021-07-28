@@ -13,15 +13,16 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { FormControl, FormControlLabel, Grid, MenuItem, RadioGroup, TextField } from '@material-ui/core';
-import Radio from '@material-ui/core/Radio';
 import { db } from '../../firebase/firebaseConfig'
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import SearchIcon from '@material-ui/icons/Search';
-import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 import { withRouter } from 'react-router-dom';
 
 
@@ -45,22 +46,6 @@ export class CustomerList extends Component {
                 sortType: 'asc'
             },
 
-            searchValue: {
-                date: '',
-                time: '',
-                day: null,
-                month: null,
-                year: null,
-                hour: null,
-                min: null,
-                seconds: null,
-                lat: null,
-                lon: null,
-                tzone: null,
-                ayanamsha: '',
-                place: '',
-            },
-
             searchField: '',
             searchTracker: false,
             ROW_LIMIT: 5,
@@ -73,12 +58,12 @@ export class CustomerList extends Component {
 
     fetchQuery = (limitLabel, limitValue = 5, from = 'others') => {
 
-        const { searchField, searchValue, sortDetails, visibleRows, LIMIT_TO_LAST, PREVIOUS, NEXT, LIMIT } = this.state;
+        const { searchField, sortDetails, visibleRows, LIMIT_TO_LAST, PREVIOUS, NEXT, LIMIT } = this.state;
         var query = db.collection("customer");
-        if (searchField && searchValue[searchField]) {        
-            query = query.where(searchField, '<=', `${searchValue[searchField]}`).where(searchField, '>=', `${searchValue[searchField]}`)
+        if (searchField) { 
+            query = query.where('keywords', 'array-contains', searchField.toLowerCase())
         }
-        query = query.orderBy(sortDetails.sortValue, sortDetails.sortType)
+        query = query.orderBy(sortDetails.sortValue, sortDetails.sortType);
 
         return limitLabel === LIMIT_TO_LAST && from === PREVIOUS ?
             query.endBefore(visibleRows.firstVisible).limitToLast(limitValue) :
@@ -135,7 +120,6 @@ export class CustomerList extends Component {
 
         var firstQuery = this.fetchQuery(LIMIT, 1);
         firstQuery.get().then(querySnapshot => {
-
             querySnapshot.docs[0] && this.setState({
                 firstRowId: querySnapshot.docs[0].id
             })
@@ -173,7 +157,6 @@ export class CustomerList extends Component {
         })
     }
 
-    // }, [searchTracker, sortDetails])
 
     updateLastRowId = () => {
 
@@ -191,7 +174,6 @@ export class CustomerList extends Component {
 
         })
     }
-    // }, [lastRowId])
 
 
 
@@ -258,11 +240,11 @@ export class CustomerList extends Component {
     searchChangeHandler = (event) => {
 
         this.setState({
-            searchValue: {
-                [event.target.name]: event.target.value
-            }
+            searchField: event.target.value
         }, () => {
-            if (this.state.searchValue && this.state.searchField && this.state.searchValue[this.state.searchField] == '') {
+            this.updateFirstLastRowID();
+ 
+            if (this.state.searchField && this.state.searchField == '') {
                 this.setState({
                     sortDetails: {
                         sortValue: 'ayanamsha',
@@ -277,19 +259,11 @@ export class CustomerList extends Component {
     }
 
 
-    searchHandler = (event, from, field) => {
-        const { searchValue } = this.state;
+    searchHandler = (event, from) => {
 
         if (event.key === "Enter" || from === 'iconClick') {
-            if (!Object.values(searchValue).includes('')) {
-                this.setState({
-                    searchField: field,
-                    sortDetails: {
-                        sortValue: field,
-                    }
-                }, () => {
-                    this.updateFirstLastRowID();
-                });
+            if (this.state.searchField != '') {
+                this.updateFirstLastRowID();
             }
         }
     }
@@ -307,9 +281,30 @@ export class CustomerList extends Component {
 
         return (
             <div>
-                <div style={{ width: '90%', margin: '0 auto' }}>
-                    <h2 style={{ textAlign: 'center' }}> Customer List</h2>
 
+                
+
+        <Card style={{ width: '90%', margin: '25px auto', padding: '20px' }}>
+      <CardContent style={{position: 'relative', marginBottom: '15px', padding: '0px'}}>
+      <div style={{display: 'flex', alignItems: 'center'}}>
+
+      <h2 style={{ margin: '0px auto' }}> Customer List</h2>
+
+
+<OutlinedInput name={'search'} size="small" placeholder='Search' value={this.state.searchField} onKeyDown={(event) => this.searchHandler(event, '')} onChange={this.searchChangeHandler} className={classes.inputField}
+    endAdornment={
+        <InputAdornment position="end">
+            <IconButton
+                type='submit' onClick={(event) => this.searchHandler(event, 'iconClick')}
+            >
+                <SearchIcon style={{ cursor: 'pointer', color: '#22d1dd' }} />
+            </IconButton>
+        </InputAdornment>
+    } />
+</div>
+      </CardContent>
+      <CardActions>
+    
                     <>
                         <TableContainer component={Paper} >
                             <Table className={classes.table} aria-label="simple table">
@@ -336,32 +331,6 @@ export class CustomerList extends Component {
                                                 </TableCell>
                                             ))
                                         }
-                                    </TableRow>
-                                    <TableRow>
-                                        {
-                                            tableData.map((item, index) => (
-                                                <TableCell>{
-                                                    item.headerName == 'Name' ?
-                                                        <div>
-
-                                                            <Input name={item.field} value={this.state.searchValue[item.field]} onKeyDown={(event) => this.searchHandler(event, '', item.field)} onChange={this.searchChangeHandler} className={classes.inputField}
-                                                                endAdornment={
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton
-                                                                            type='submit' onClick={(event) => this.searchHandler(event, 'iconClick', item.field)}
-                                                                        >
-                                                                            <SearchIcon style={{ cursor: 'pointer', color: '#22d1dd' }} />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                } />
-                                                        </div>
-                                                        :
-                                                        null
-                                                }
-                                                </TableCell>
-                                            ))
-                                        }
-
                                     </TableRow>
                                 </TableHead>
 
@@ -420,8 +389,11 @@ export class CustomerList extends Component {
 
                     </>
 
+        </CardActions>
+    </Card>
+
                 </div>
-            </div>
+           
         )
     }
 }

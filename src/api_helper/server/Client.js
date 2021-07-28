@@ -45,7 +45,7 @@ function ApiCall(
 function firebaseApiCall(method, payload, docId=''){
     switch(method) {
         case 'POST':
-            return db.collection('customer').add(payload.data)
+            return db.collection('customer').add({...payload.data, keywords: payload.keywords})
             .then((docRef) => {
                 const chartData = { ...payload.chartDetails, customerId: docRef.id }
                 db.collection('customerCharts').add(chartData)
@@ -54,7 +54,7 @@ function firebaseApiCall(method, payload, docId=''){
             })
 
         case 'PUT':
-            return db.collection('customer').doc(docId).set(payload.data).then(res =>{
+            return db.collection('customer').doc(docId).set({...payload.data, keywords: payload.keywords}).then(res =>{
                 db.collection('customerCharts').add(payload.chartDetails)
                     .then(() => console.log("Chart data Added!!"))
                     .catch((error) => console.log("Error in", error))

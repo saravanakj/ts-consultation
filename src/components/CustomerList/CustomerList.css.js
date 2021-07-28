@@ -10,7 +10,11 @@ export const styles = theme => ({
           justifyContent: 'space-between',
       },
       inputField:{
-        width: '70%',
+        width: '16%',
+        position: 'absolute',
+        top: '0px',
+        right: '20px',
+        height: '35px'
     },
     paginationArrows:{
         float: 'right',
