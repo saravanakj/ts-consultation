@@ -19,22 +19,22 @@ import {
 import { prepareChartData, getPPTable, getPlanetTable } from "./helper";
 import "../../App.css";
 import { LocationSearchInput } from "../../components/LocationSearchInput/LocationSearchInput";
-import { db } from '../../firebase/firebaseConfig'
-import Alert from '@material-ui/lab/Alert';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import Tooltip from '@material-ui/core/Tooltip';
-import { withStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
+import { db } from "../../firebase/firebaseConfig";
+import Alert from "@material-ui/lab/Alert";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+import Tooltip from "@material-ui/core/Tooltip";
+import { withStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
 
 const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
   const [selecInd, setSelecInd] = useState(null);
   return data.length > 0 ? (
     <div className="pt_card">
       <h1>{title}</h1>
-      <div className="pt_smallcard_cotaier">
+      <div className="pt_smallcard_contanier">
         <table>
           {data.map((i) => {
             return (
@@ -58,8 +58,7 @@ const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
     </div>
   ) : null;
 };
-const setOpacity = (plList = []) => {
-  let planetList = ["Su", "Mo", "Ma", "Ra", "Ju", "Sa", "Me", "Ke", "Ve"];
+const setOpacity = (plList = [], planetList) => {
   const styleObj = planetList.map((o) => {
     return { name: o, transparency: !plList.includes(o) };
   });
@@ -68,31 +67,34 @@ const setOpacity = (plList = []) => {
 
 const opaqueStyle = { opacity: "0.2" };
 const normalStyle = { opacity: "1" };
+const planetList = ["Su", "Mo", "Ma", "Ra", "Ju", "Sa", "Me", "Ke", "Ve"];
 
-const DisplayPPList = ({ ppList }) => {
-  return ppList.length > 0 ? (
+const DisplayBhavaList = ({ BhavaList }) => {
+  return (
     <div className="pl_card">
-      <div className="pt_smallcard_cotaier">
+      <div className="pt_smallcard_contanier">
         <table className="table">
           <tr className={`pt_smallcard`}>
-            <th className="dasa_cell w20">Bhava#</th>
-            <th className="dasa_cell w20">Count</th>
-            <th className="dasa_cell w40">Primary Planets</th>
-            <th className="dasa_cell w40">Planet Located</th>
-            <th className="dasa_cell w40">Connected Planets</th>
+            <th className="dasa_cell w10">Bh#</th>
+            <th className="dasa_cell w10">No.</th>
+            <th className="dasa_cell w20">Primary PL</th>
+            <th className="dasa_cell w20">Located PL</th>
+            <th className="dasa_cell w40">Connected PL</th>
           </tr>
-          {ppList.map((i) => {
-            const planetStyleObjects = setOpacity(i.pl);
+
+          {BhavaList.map((i) => {
+            const planetStyleObjects = setOpacity(i.pl, planetList);
+
             return (
               <tr className={`pt_smallcard`}>
-                <td className={`pp_cell w20 ${i.count > 6 ? "highlight" : ""}`}>
+                <td className={`pp_cell w10 ${i.count > 6 ? "highlight" : ""}`}>
                   {i.houseId}
                 </td>
-                <td className="pp_cell w20">{i.count}</td>
-                <td className="pp_cell w40">{i.pp.join(", ")}</td>
-                <td className="pp_cell w40">{i.loc.join(", ")}</td>
+                <td className="pp_cell w10">{i.count}</td>
+                <td className="pp_cell w20">{i.pp.join(", ")}</td>
+                <td className="pp_cell w20">{i.loc.join(", ")}</td>
                 <td className="pp_cell w40">
-                  {planetStyleObjects.map((pl, i) => (
+                  {planetStyleObjects.map((pl) => (
                     <span style={pl.transparency ? opaqueStyle : normalStyle}>
                       {pl.name}
                       {pl.name != "Ve" ? ", " : ""}
@@ -105,41 +107,42 @@ const DisplayPPList = ({ ppList }) => {
         </table>
       </div>
     </div>
-  ) : null;
+  );
 };
+const planetNo = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const DisplayPlanetList = ({ PlanetList }) => {
-  return PlanetList[0].primBh.length > 0 ||
-    PlanetList[1].primBh.length > 0 ||
-    PlanetList[2].primBh.length > 0 ||
-    PlanetList[3].primBh.length > 0 ||
-    PlanetList[4].primBh.length > 0 ||
-    PlanetList[5].primBh.length > 0 ||
-    PlanetList[6].primBh.length > 0 ||
-    PlanetList[7].primBh.length > 0 ||
-    PlanetList[8].primBh.length > 0 ? (
+  return (
     <div className="pl_card">
-      <div className="pt_smallcard_cotaier">
+      <div className="pt_smallcard_contanier">
         <table className="table">
           <tr className={`pt_smallcard`}>
             <th className="dasa_cell w20">Planet name</th>
             <th className="dasa_cell w20">Primary Bh</th>
-            <th className="dasa_cell w40">Located Bh</th>
-            <th className="dasa_cell w40">Connected Bh</th>
+            <th className="dasa_cell w10">Located Bh</th>
+            <th className="dasa_cell w50">Connected Bh</th>
           </tr>
           {PlanetList.map((i) => {
+            const planetNoObjects = setOpacity(i.connectBh, planetNo);
             return (
               <tr className={`pt_smallcard`}>
                 <td className={`pp_cell w20 `}>{i.planetName}</td>
                 <td className="pp_cell w20">{i.primBh.join(", ")}</td>
-                <td className="pp_cell w40">{i.locBh.join(", ")}</td>
-                <td className="pp_cell w40">{i.connectBh.join(", ")}</td>
+                <td className="pp_cell w10">{i.locBh.join(", ")}</td>
+                <td className="pp_cell w50">
+                  {planetNoObjects.map((plno) => (
+                    <span style={plno.transparency ? opaqueStyle : normalStyle}>
+                      {plno.name}
+                      {plno.name != 12 ? ", " : ""}
+                    </span>
+                  ))}
+                </td>
               </tr>
             );
           })}
         </table>
       </div>
     </div>
-  ) : null;
+  );
 };
 class Home extends Component {
   constructor(props) {
@@ -255,26 +258,22 @@ class Home extends Component {
     }
   };
 
-
   createKeywords = (name) => {
     const keywordsArray = [];
-    let currentKeyword = '';
-    name.split('').forEach(letter => {
-      currentKeyword += letter.toLowerCase()
-      keywordsArray.push(currentKeyword)
+    let currentKeyword = "";
+    name.split("").forEach((letter) => {
+      currentKeyword += letter.toLowerCase();
+      keywordsArray.push(currentKeyword);
     });
     return keywordsArray;
-  }
+  };
 
   generateKeywords = (name, place) => {
     const keywordName = this.createKeywords(name);
     const keywordPlace = this.createKeywords(place);
 
-    return [
-      ...new Set([...keywordName, ...keywordPlace,])
-    ]
+    return [...new Set([...keywordName, ...keywordPlace])];
   };
-
 
   saveUpdateHandler = () => {
     const { dispatch } = this.props;
@@ -347,9 +346,8 @@ class Home extends Component {
   };
 
   viewHandler = () => {
-    this.props.history.push('/customer-list')
+    this.props.history.push("/customer-list");
   };
-
 
   handleSearch = () => {
     const { dispatch } = this.props;
@@ -454,216 +452,284 @@ class Home extends Component {
       subDasha4,
     } = this.props;
 
-      const CustomTooltip = withStyles({
-        tooltip:{
-          color: 'white',
-          background: 'black'
-        }
-      })(Tooltip)
+    const CustomTooltip = withStyles({
+      tooltip: {
+        color: "white",
+        background: "black",
+      },
+    })(Tooltip);
 
     return (
       <div>
-        
-        <Card style={{ width: '98%', margin: '25px auto', backgroundColor: '#E2E4EF', minHeight: 'calc(100vh - 50px)'}}>
-      <CardContent className="row_block">
-          <div className="pt_search" >
-            <input className="pt_input search_txt_box w10" name="ayanamsha" type="text" placeholder="Name" value={this.state.ayanamsha} onChange={(event) => this.handleInput(event)} />
-            <input className="pt_input w15" name="date" type="date" value={this.state.date} onChange={(event) => this.handleInput(event)} />
-            <input type="time" step='1' name="time" placeholder="Time" className="pt_input w15" value={this.state.time} onChange={(event) => this.handleInput(event)} />
-            <input type="hidden" name="lat" className="pt_input w10" value={this.state.lat} onChange={(event) => this.handleInput(event)} />
-            <input type="hidden" name="lon" className="pt_input w10" value={this.state.lon} onChange={(event) => this.handleInput(event)} />
-            <input type="text" name="tzone" placeholder="Time Zone" className="pt_input w10" value={this.state.tzone} onChange={(event) => this.handleInput(event)} />
-            <div style={{display: 'flex', alignItems: 'center'}}>
-
-            <CustomTooltip title={`lat:${this.state.lat.toFixed(4)} lon:${this.state.lon.toFixed(4)}`} arrow placement="top-start">
-                <LocationOnIcon />
-            </CustomTooltip>
-
-            <LocationSearchInput address={this.state.place}
-              className="places-input"
-              locationSelected={this.locationSelected}
-              onReceiveOtherDetails={this.onReceiveLocationOtherDetails}
-            />
-                        </div>
-
-            <button className="pt_button w100p" onClick={this.handleSearch}>Generate</button>
-            <button className="pt_button w100p" onClick={this.saveUpdateHandler} disabled={this.props.data.length
-              ? false : true}>Save</button>
-            <button className="pt_button w100p" onClick={this.viewHandler}>Look Up</button>
-
-          </div>
-      </CardContent>
-      <CardActions>
-        {data && data.length > 0 &&
-        <div className="table_container">
-          <div className="pt_table table_split float_left">
-            <table className="table">
-              <thead className="table_header">
-                <tr>
-                  <td className="bava_no">B#</td>
-                  <td></td>
-                  <td>SL</td>
-                  <td>DAL</td>
-                  <td>BHL</td>
-                  <td>ANL</td>
-                  <td>DEG</td>
-                  <td>PL</td>
-                  <td>PSL</td>
-                  <td>NL</td>
-                  <td>PSU</td>
-                  <td>SSL</td>
-                </tr>
-              </thead>
-              <tbody>
-                {data &&
-                  data.length > 0 &&
-                  data.map((c, idx) => (
-                    <tr key={`data${idx}`}>
-                      <td className="bava_no">{c.houseId}</td>
-
-                      <td className="dull_part1">
-                        <Fragment>
-                          <i
-                            class="material-icons"
-                            style={{ cursor: "pointer" }}
-                            data-tip
-                            data-for={`planetSignNametooltip${idx}`}
-                          >
-                            visibility_off
-                          </i>
-                          <ReactTooltip
-                            place="top"
-                            type="dark"
-                            id={`planetSignNametooltip${idx}`}
-                          >
-                            PSN:{c.planetSignName || "-"}&nbsp;,DN:
-                            {c.houseNakshathraName || "-"},&nbsp;HSN:
-                            {c.houseSignName || "-"},&nbsp;SUKL:
-                            {c.sukLord || "-"},&nbsp;NN:{c.planetNakName || "-"}
-                            ,&nbsp;SSS:{c.planetSubSubSubLord || "-"}
-                          </ReactTooltip>
-                        </Fragment>
-                      </td>
-
-                      {c.houseSignLord === undefined && <td>{""}</td>}
-                      {c.houseSignLord !== undefined && (
-                        <td className="dull_part">
-                          {c.houseSignLord.substring(0, 2)}
-                        </td>
-                      )}
-                      {c.dhasaLord === undefined && (
-                        <td className="highlight">{""}</td>
-                      )}
-                      {c.dhasaLord !== undefined && (
-                        <td className="highlight">
-                          {c.dhasaLord.substring(0, 2)}
-                        </td>
-                      )}
-                      {c.bukthiLord === undefined && <td>{""}</td>}
-                      {c.bukthiLord !== undefined && (
-                        <td className="highlight">
-                          {c.bukthiLord.substring(0, 2)}
-                        </td>
-                      )}
-                      {c.antharaLord === undefined && <td>{""}</td>}
-                      {c.antharaLord !== undefined && (
-                        <td className="highlight">
-                          {c.antharaLord.substring(0, 2)}
-                        </td>
-                      )}
-                      <td>{c.degree.toFixed(2) || ""}</td>
-                      {c.planet === undefined && (
-                        <td className="highlight">{c.planet || ""}</td>
-                      )}
-                      {c.planet !== undefined && (
-                        <td className="highlight">
-                          {c.planet.substring(0, 2)}
-                        </td>
-                      )}
-                      {c.planetSignLord === undefined && (
-                        <td className="dull_part">{c.planetSignLord || ""}</td>
-                      )}
-                      {c.planetSignLord !== undefined && (
-                        <td className="dull_part">
-                          {c.planetSignLord.substring(0, 2)}
-                        </td>
-                      )}
-                      {c.planetNakLord === undefined && <td>{""}</td>}
-                      {c.planetNakLord !== undefined && (
-                        <td className="highlight">
-                          {c.planetNakLord.substring(0, 2)}
-                        </td>
-                      )}
-                      {c.planetSubLord === undefined && <td>{""}</td>}
-                      {c.planetSubLord !== undefined && (
-                        <td className="highlight">
-                          {c.planetSubLord.substring(0, 2)}
-                        </td>
-                      )}
-                      {c.planetSubSubLord === undefined && <td>{""}</td>}
-                      {c.planetSubSubLord !== undefined && (
-                        <td className="highlight">
-                          {c.planetSubSubLord.substring(0, 2)}
-                        </td>
-                      )}
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="pt_table table_split float_right">
-            <div className="pt_maincard bava_table_container">
-              <DisplayPPList ppList={ppList} />
-              <DisplayPlanetList PlanetList={PlanetList} />
-
-              <DisplayDhasa
-                data={majorDasha}
-                title="Dasa Table"
-                handleClick={this.handleDasha}
-                keyName="dasaData"
+        <Card
+          style={{
+            width: "98%",
+            margin: "25px auto",
+            backgroundColor: "#E2E4EF",
+            minHeight: "calc(100vh - 50px)",
+          }}
+        >
+          <CardContent className="row_block">
+            <div className="pt_search">
+              <input
+                className="pt_input search_txt_box w10"
+                name="ayanamsha"
+                type="text"
+                placeholder="Name"
+                value={this.state.ayanamsha}
+                onChange={(event) => this.handleInput(event)}
               />
-              <DisplayDhasa
-                data={subDasha}
-                title="Bukthi Table"
-                handleClick={this.handleDasha}
-                keyName="bukthiData"
+              <input
+                className="pt_input w15"
+                name="date"
+                type="date"
+                value={this.state.date}
+                onChange={(event) => this.handleInput(event)}
               />
-              <DisplayDhasa
-                data={subDasha2}
-                title="Anthra Table"
-                handleClick={this.handleDasha}
-                keyName="anthraData"
+              <input
+                type="time"
+                step="1"
+                name="time"
+                placeholder="Time"
+                className="pt_input w15"
+                value={this.state.time}
+                onChange={(event) => this.handleInput(event)}
               />
-              <DisplayDhasa
-                data={subDasha3}
-                title="Sukshma Table"
-                handleClick={this.handleDasha}
-                keyName="sukshmaData"
+              <input
+                type="hidden"
+                name="lat"
+                className="pt_input w10"
+                value={this.state.lat}
+                onChange={(event) => this.handleInput(event)}
               />
-              <DisplayDhasa
-                data={subDasha4}
-                title="Adhisukshma Table"
-                handleClick={this.handleDasha}
-                keyName="adhisukshmaData"
+              <input
+                type="hidden"
+                name="lon"
+                className="pt_input w10"
+                value={this.state.lon}
+                onChange={(event) => this.handleInput(event)}
               />
+              <input
+                type="text"
+                name="tzone"
+                placeholder="Time Zone"
+                className="pt_input w10"
+                value={this.state.tzone}
+                onChange={(event) => this.handleInput(event)}
+              />
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <CustomTooltip
+                  title={`lat:${this.state.lat.toFixed(
+                    4
+                  )} lon:${this.state.lon.toFixed(4)}`}
+                  arrow
+                  placement="top-start"
+                >
+                  <LocationOnIcon />
+                </CustomTooltip>
+
+                <LocationSearchInput
+                  address={this.state.place}
+                  className="places-input"
+                  locationSelected={this.locationSelected}
+                  onReceiveOtherDetails={this.onReceiveLocationOtherDetails}
+                />
+              </div>
+
+              <button className="pt_button w100p" onClick={this.handleSearch}>
+                Generate
+              </button>
+              <button
+                className="pt_button w100p"
+                onClick={this.saveUpdateHandler}
+                disabled={this.props.data.length ? false : true}
+              >
+                Save
+              </button>
+              <button className="pt_button w100p" onClick={this.viewHandler}>
+                Look Up
+              </button>
             </div>
-          </div>
-        </div>
-  }
-        {
-          this.state.showAlert &&
-          <div className="alertWrapper">
-            <Alert severity="success" style={{ backgroundColor: 'rgb(106, 90, 205)', color: 'white' }}>
-              {this.props && this.props.location && this.props.location.state &&
-                this.props.location.state.selectedRow && 'Data saved successfully!'}
-            </Alert>
-          </div>
+          </CardContent>
+          <CardActions>
+            {data && data.length > 0 && (
+              <div className="table_container">
+                <div className="pt_table table_split float_left">
+                  <table className="table">
+                    <thead className="table_header">
+                      <tr>
+                        <td className="bava_no">B#</td>
+                        <td></td>
+                        <td>SL</td>
+                        <td>DAL</td>
+                        <td>BHL</td>
+                        <td>ANL</td>
+                        <td>DEG</td>
+                        <td>PL</td>
+                        <td>PSL</td>
+                        <td>NL</td>
+                        <td>PSU</td>
+                        <td>SSL</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data &&
+                        data.length > 0 &&
+                        data.map((c, idx) => (
+                          <tr key={`data${idx}`}>
+                            <td className="bava_no">{c.houseId}</td>
 
-        }
+                            <td className="dull_part1">
+                              <Fragment>
+                                <i
+                                  class="material-icons"
+                                  style={{ cursor: "pointer" }}
+                                  data-tip
+                                  data-for={`planetSignNametooltip${idx}`}
+                                >
+                                  visibility_off
+                                </i>
+                                <ReactTooltip
+                                  place="top"
+                                  type="dark"
+                                  id={`planetSignNametooltip${idx}`}
+                                >
+                                  PSN:{c.planetSignName || "-"}&nbsp;,DN:
+                                  {c.houseNakshathraName || "-"},&nbsp;HSN:
+                                  {c.houseSignName || "-"},&nbsp;SUKL:
+                                  {c.sukLord || "-"},&nbsp;NN:
+                                  {c.planetNakName || "-"}
+                                  ,&nbsp;SSS:{c.planetSubSubSubLord || "-"}
+                                </ReactTooltip>
+                              </Fragment>
+                            </td>
 
-</CardActions>
-</Card>
+                            {c.houseSignLord === undefined && <td>{""}</td>}
+                            {c.houseSignLord !== undefined && (
+                              <td className="dull_part">
+                                {c.houseSignLord.substring(0, 2)}
+                              </td>
+                            )}
+                            {c.dhasaLord === undefined && (
+                              <td className="highlight">{""}</td>
+                            )}
+                            {c.dhasaLord !== undefined && (
+                              <td className="highlight">
+                                {c.dhasaLord.substring(0, 2)}
+                              </td>
+                            )}
+                            {c.bukthiLord === undefined && <td>{""}</td>}
+                            {c.bukthiLord !== undefined && (
+                              <td className="highlight">
+                                {c.bukthiLord.substring(0, 2)}
+                              </td>
+                            )}
+                            {c.antharaLord === undefined && <td>{""}</td>}
+                            {c.antharaLord !== undefined && (
+                              <td className="highlight">
+                                {c.antharaLord.substring(0, 2)}
+                              </td>
+                            )}
+                            <td>{c.degree.toFixed(2) || ""}</td>
+                            {c.planet === undefined && (
+                              <td className="highlight">{c.planet || ""}</td>
+                            )}
+                            {c.planet !== undefined && (
+                              <td className="highlight">
+                                {c.planet.substring(0, 2)}
+                              </td>
+                            )}
+                            {c.planetSignLord === undefined && (
+                              <td className="dull_part">
+                                {c.planetSignLord || ""}
+                              </td>
+                            )}
+                            {c.planetSignLord !== undefined && (
+                              <td className="dull_part">
+                                {c.planetSignLord.substring(0, 2)}
+                              </td>
+                            )}
+                            {c.planetNakLord === undefined && <td>{""}</td>}
+                            {c.planetNakLord !== undefined && (
+                              <td className="highlight">
+                                {c.planetNakLord.substring(0, 2)}
+                              </td>
+                            )}
+                            {c.planetSubLord === undefined && <td>{""}</td>}
+                            {c.planetSubLord !== undefined && (
+                              <td className="highlight">
+                                {c.planetSubLord.substring(0, 2)}
+                              </td>
+                            )}
+                            {c.planetSubSubLord === undefined && <td>{""}</td>}
+                            {c.planetSubSubLord !== undefined && (
+                              <td className="highlight">
+                                {c.planetSubSubLord.substring(0, 2)}
+                              </td>
+                            )}
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="pt_table table_split float_right">
+                  <div className="pt_maincard bava_table_container">
+                    <DisplayBhavaList BhavaList={ppList} />
+                    <DisplayPlanetList PlanetList={PlanetList} />
 
+                    <DisplayDhasa
+                      data={majorDasha}
+                      title="Dasa Table"
+                      handleClick={this.handleDasha}
+                      keyName="dasaData"
+                    />
+                    <DisplayDhasa
+                      data={subDasha}
+                      title="Bukthi Table"
+                      handleClick={this.handleDasha}
+                      keyName="bukthiData"
+                    />
+                    <DisplayDhasa
+                      data={subDasha2}
+                      title="Anthra Table"
+                      handleClick={this.handleDasha}
+                      keyName="anthraData"
+                    />
+                    <DisplayDhasa
+                      data={subDasha3}
+                      title="Sukshma Table"
+                      handleClick={this.handleDasha}
+                      keyName="sukshmaData"
+                    />
+                    <DisplayDhasa
+                      data={subDasha4}
+                      title="Adhisukshma Table"
+                      handleClick={this.handleDasha}
+                      keyName="adhisukshmaData"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            {this.state.showAlert && (
+              <div className="alertWrapper">
+                <Alert
+                  severity="success"
+                  style={{
+                    backgroundColor: "rgb(106, 90, 205)",
+                    color: "white",
+                  }}
+                >
+                  {this.props &&
+                    this.props.location &&
+                    this.props.location.state &&
+                    this.props.location.state.selectedRow &&
+                    "Data saved successfully!"}
+                </Alert>
+              </div>
+            )}
+          </CardActions>
+        </Card>
       </div>
     );
   }
