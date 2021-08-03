@@ -58,15 +58,21 @@ const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
     </div>
   ) : null;
 };
-const setOpacity = (plList = [], planetList) => {
+
+const setOpacityUnderline = (plList, SSllist, planetList) => {
   const styleObj = planetList.map((o) => {
-    return { name: o, transparency: !plList.includes(o) };
+    return {
+      name: o,
+      transparency: !plList.includes(o),
+      underline: SSllist.includes(o),
+    };
   });
   return styleObj;
 };
 
 const opaqueStyle = { opacity: "0.2" };
 const normalStyle = { opacity: "1" };
+const normalUnderStyle = { opacity: "1", textDecoration: "underline" };
 const planetList = ["Su", "Mo", "Ma", "Ra", "Ju", "Sa", "Me", "Ke", "Ve"];
 
 const DisplayBhavaList = ({ BhavaList }) => {
@@ -83,7 +89,11 @@ const DisplayBhavaList = ({ BhavaList }) => {
           </tr>
 
           {BhavaList.map((i) => {
-            const planetStyleObjects = setOpacity(i.pl, planetList);
+            const planetStyleObjects = setOpacityUnderline(
+              i.pl,
+              i.SSLlist,
+              planetList
+            );
 
             return (
               <tr className={`pt_smallcard`}>
@@ -95,7 +105,15 @@ const DisplayBhavaList = ({ BhavaList }) => {
                 <td className="pp_cell w20">{i.loc.join(", ")}</td>
                 <td className="pp_cell w40">
                   {planetStyleObjects.map((pl) => (
-                    <span style={pl.transparency ? opaqueStyle : normalStyle}>
+                    <span
+                      style={
+                        pl.transparency
+                          ? opaqueStyle
+                          : pl.underline
+                          ? normalUnderStyle
+                          : normalStyle
+                      }
+                    >
                       {pl.name}
                       {pl.name != "Ve" ? ", " : ""}
                     </span>
@@ -108,6 +126,13 @@ const DisplayBhavaList = ({ BhavaList }) => {
       </div>
     </div>
   );
+};
+
+const setOpacity = (plList = [], planetList) => {
+  const styleObj = planetList.map((o) => {
+    return { name: o, transparency: !plList.includes(o) };
+  });
+  return styleObj;
 };
 const planetNo = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const DisplayPlanetList = ({ PlanetList }) => {
@@ -125,7 +150,7 @@ const DisplayPlanetList = ({ PlanetList }) => {
             const planetNoObjects = setOpacity(i.connectBh, planetNo);
             return (
               <tr className={`pt_smallcard`}>
-                <td className={`pp_cell w20 `}>{i.planetName}</td>
+                <td className={`pp_cell w20`}>{i.planetName}</td>
                 <td className="pp_cell w20">{i.primBh.join(", ")}</td>
                 <td className="pp_cell w10">{i.locBh.join(", ")}</td>
                 <td className="pp_cell w50">

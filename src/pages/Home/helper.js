@@ -95,21 +95,33 @@ const calculatePP = (bhavas) => {
 const calculatePL = (bhavas, ppList) => {
   let plList = [];
   let bhavaPlanets = bhavas.filter((b) => b.planet != undefined);
+  let SSLlist = [];
   ppList.forEach((pp) => {
+    let SSLtemp = [];
     let pList = bhavaPlanets
       .map((bp) => {
+        if (
+          pp[bp.planetNakLord] != true &&
+          pp[bp.planetSubLord] != true &&
+          bp.planetNakLord == bp.planetSubLord &&
+          pp[bp.planetSubSubLord] == true
+        )
+          SSLtemp.push(bp.planet);
+
         return pp[bp.planet] == true ||
           pp[bp.planetNakLord] == true ||
           pp[bp.planetSubLord] == true ||
-          pp[bp.planetSubSubLord] == true
+          (bp.planetNakLord == bp.planetSubLord &&
+            pp[bp.planetSubSubLord] == true)
           ? bp.planet
           : "";
       })
       .filter((x) => x != "");
-
+    SSLlist.push(SSLtemp);
     plList.push(pList);
   });
-  return plList;
+
+  return { plList: plList, SSLlist: SSLlist };
 };
 
 const twoDimArrToObj = (data) => {
@@ -140,7 +152,7 @@ export const getPlanetTable = (bhavas) => {
     "Venus",
   ];
   let PP = calculatePP(bhavas);
-  let PL = calculatePL(bhavas, PP);
+  let { plList: PL } = calculatePL(bhavas, PP);
   let PLarray = twoDimArrToObj(PL);
 
   let PlanetTableArray = [];
@@ -182,7 +194,8 @@ export const getPPTable = (bhavas) => {
   let ppList = [];
   if (bhavas.length > 0) {
     let PP = calculatePP(bhavas);
-    let PL = calculatePL(bhavas, PP);
+    let { plList: PL, SSLlist: SSLlist } = calculatePL(bhavas, PP);
+
     for (let i = 1; i <= 12; i++) {
       let y = i - 1;
       let PParray = Object.keys(PP[y]);
@@ -198,6 +211,7 @@ export const getPPTable = (bhavas) => {
         pp: PParray.map((p) => p.substring(0, 2)),
         loc: tempArr,
         pl: PL[y].map((p) => p.substring(0, 2)),
+        SSLlist: SSLlist[y].map((p) => p.substring(0, 2)),
       });
     }
   }
