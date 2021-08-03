@@ -415,7 +415,32 @@ class Home extends Component {
 
   handleDasha = (name, keyName) => {
     const { dispatch } = this.props;
-    const { dasha, payload } = this.state;
+    const {
+      dasha,
+      year,
+      month,
+      day,
+      hour,
+      min,
+      seconds,
+      lat,
+      lon,
+      ayanamsha,
+      tzone,
+    } = this.state;
+
+    const payload = {
+      year,
+      month,
+      day,
+      hour,
+      min,
+      seconds,
+      lat,
+      lon,
+      ayanamsha,
+      tzone,
+    };
     this.setState({
       dasha: {
         ...dasha,
