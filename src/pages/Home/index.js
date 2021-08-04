@@ -151,7 +151,7 @@ const DisplayPlanetList = ({ PlanetList }) => {
             const planetNoObjects = setOpacity(i.connectBh, planetNo);
             return (
               <tr className={`pt_smallcard`}>
-                <td className={`pp_cell w20`}>{i.planetName}</td>
+                <td className="pp_cell w20">{i.planetName}</td>
                 <td className="pp_cell w20">{i.primBh.join(", ")}</td>
                 <td className="pp_cell w10">{i.locBh.join(", ")}</td>
                 <td className="pp_cell w50">

@@ -74,7 +74,7 @@ const calculatePP = (bhavas) => {
   let calcObj = {};
   let planetArray = [];
   let planetTemp = [];
-  for (let elem of bhavas) {
+  bhavas.forEach((elem) => {
     if (elem.houseId) {
       planetArray.push(planetTemp);
       displayPP.push(dispObj);
@@ -93,7 +93,7 @@ const calculatePP = (bhavas) => {
     } else {
       planetTemp.push(elem.planet);
     }
-  }
+  });
   planetArray.push(planetTemp);
   planetArray.shift();
   displayPP.push(dispObj);
@@ -109,6 +109,12 @@ const calculatePP = (bhavas) => {
   return { displayPP: displayPP, calcPP: calcPP, planetArray: planetArray };
 };
 
+/**
+ * Calculates ...
+ * @param {Array} bhavas
+ * @param {Array} ppList
+ * @returns
+ */
 const calculatePL = (bhavas, ppList) => {
   let plList = [];
   let bhavaPlanets = bhavas.filter((b) => b.planet != undefined);
@@ -190,11 +196,11 @@ export const getPlanetTable = (bhavas) => {
     connectBhTemp = [];
     // };
 
-    for (let i = 0; i < calcPP.length; i++) {
+    calcPP.forEach((item, i) => {
       if (calcPP[i][planet]) primBhTemp.push(i + 1);
       if (planetArray[i].includes(planet)) locBhTemp.push(i + 1);
       if (PLarray[i][planet]) connectBhTemp.push(i + 1);
-    }
+    });
   });
   PlanetTableArray.push({
     primBh: primBhTemp,
@@ -219,8 +225,8 @@ export const getPPTable = (bhavas) => {
 
     let { plList: PL, SSLlist: SSLlist } = calculatePL(bhavas, calcPP);
 
-    for (let i = 1; i <= 12; i++) {
-      let y = i - 1;
+    PL.forEach((item, y) => {
+      let i = y + 1;
       let PParray = Object.keys(displayPP[y]);
       console.log(displayPP[y]);
       console.log(PParray);
@@ -231,13 +237,13 @@ export const getPPTable = (bhavas) => {
 
       ppList.push({
         houseId: i,
-        count: PL[y].length,
+        count: item.length,
         pp: PParray.map((p) => p.substring(0, 2)),
         loc: tempArr,
-        pl: PL[y].map((p) => p.substring(0, 2)),
+        pl: item.map((p) => p.substring(0, 2)),
         SSLlist: SSLlist[y].map((p) => p.substring(0, 2)),
       });
-    }
+    });
   }
 
   return ppList;
