@@ -89,7 +89,6 @@ const DisplayBhavaList = ({ BhavaList }) => {
           </tr>
 
           {BhavaList.map((i) => {
-            console.log(i.pp);
             const planetStyleObjects = setOpacityUnderline(
               i.pl,
               i.SSLlist,

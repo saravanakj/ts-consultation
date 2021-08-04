@@ -109,12 +109,6 @@ const calculatePP = (bhavas) => {
   return { displayPP: displayPP, calcPP: calcPP, planetArray: planetArray };
 };
 
-/**
- * Calculates ...
- * @param {Array} bhavas
- * @param {Array} ppList
- * @returns
- */
 const calculatePL = (bhavas, ppList) => {
   let plList = [];
   let bhavaPlanets = bhavas.filter((b) => b.planet != undefined);
@@ -185,7 +179,6 @@ export const getPlanetTable = (bhavas) => {
   let connectBhTemp = [];
 
   planetList.forEach((planet) => {
-    // let PlanetTableObject = {
     PlanetTableArray.push({
       primBh: primBhTemp,
       locBh: locBhTemp,
@@ -194,7 +187,6 @@ export const getPlanetTable = (bhavas) => {
     primBhTemp = [];
     locBhTemp = [];
     connectBhTemp = [];
-    // };
 
     calcPP.forEach((item, i) => {
       if (calcPP[i][planet]) primBhTemp.push(i + 1);
