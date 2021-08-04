@@ -229,7 +229,6 @@ export const getPPTable = (bhavas) => {
       let tempArr = [];
       if (locArray.length > 0) tempArr = locArray.map((p) => p.substring(0, 2));
 
-      PParray.pop();
       ppList.push({
         houseId: i,
         count: PL[y].length,
