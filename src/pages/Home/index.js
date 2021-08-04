@@ -72,7 +72,7 @@ const setOpacityUnderline = (plList, SSllist, planetList) => {
 
 const opaqueStyle = { opacity: "0.2" };
 const normalStyle = { opacity: "1" };
-const normalUnderStyle = { opacity: "1", textDecoration: "underline" };
+const opaqueUnderStyle = { opacity: "0.2", textDecoration: "underline" };
 const planetList = ["Su", "Mo", "Ma", "Ra", "Ju", "Sa", "Me", "Ke", "Ve"];
 
 const DisplayBhavaList = ({ BhavaList }) => {
@@ -89,6 +89,7 @@ const DisplayBhavaList = ({ BhavaList }) => {
           </tr>
 
           {BhavaList.map((i) => {
+            console.log(i.pp);
             const planetStyleObjects = setOpacityUnderline(
               i.pl,
               i.SSLlist,
@@ -108,9 +109,9 @@ const DisplayBhavaList = ({ BhavaList }) => {
                     <span
                       style={
                         pl.transparency
-                          ? opaqueStyle
-                          : pl.underline
-                          ? normalUnderStyle
+                          ? pl.underline
+                            ? opaqueUnderStyle
+                            : opaqueStyle
                           : normalStyle
                       }
                     >

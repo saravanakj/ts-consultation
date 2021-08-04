@@ -68,28 +68,45 @@ export const prepareChartData = (houses, planets) => {
 };
 
 const calculatePP = (bhavas) => {
-  let PP = [];
-  let Obj = {};
+  let displayPP = [];
+  let calcPP = [];
+  let dispObj = {};
+  let calcObj = {};
   let planetArray = [];
+  let planetTemp = [];
   for (let elem of bhavas) {
     if (elem.houseId) {
-      Obj["planetArray"] = planetArray;
-      PP.push(Obj);
-      Obj = {};
-      planetArray = [];
+      planetArray.push(planetTemp);
+      displayPP.push(dispObj);
+      calcObj = { ...dispObj };
+      planetTemp.forEach((pt) => {
+        calcObj[pt] = true;
+      });
+      calcPP.push(calcObj);
+      dispObj = {};
+      calcObj = {};
+      planetTemp = [];
 
-      Obj[elem.bukthiLord] = true;
-      Obj[elem.dhasaLord] = true;
-      Obj[elem.antharaLord] = true;
+      dispObj[elem.bukthiLord] = true;
+      dispObj[elem.dhasaLord] = true;
+      dispObj[elem.antharaLord] = true;
     } else {
-      planetArray.push(elem.planet);
+      planetTemp.push(elem.planet);
     }
   }
-  Obj["planetArray"] = planetArray;
-  PP.push(Obj);
-  PP.shift();
+  planetArray.push(planetTemp);
+  planetArray.shift();
+  displayPP.push(dispObj);
+  displayPP.shift();
+  calcObj = { ...dispObj };
+  planetTemp.forEach((pt) => {
+    calcObj[pt] = true;
+  });
 
-  return PP;
+  calcPP.push(calcObj);
+  calcPP.shift();
+
+  return { displayPP: displayPP, calcPP: calcPP, planetArray: planetArray };
 };
 
 const calculatePL = (bhavas, ppList) => {
@@ -101,9 +118,10 @@ const calculatePL = (bhavas, ppList) => {
     let pList = bhavaPlanets
       .map((bp) => {
         if (
+          pp[bp.planet] != true &&
           pp[bp.planetNakLord] != true &&
           pp[bp.planetSubLord] != true &&
-          bp.planetNakLord == bp.planetSubLord &&
+          bp.planetNakLord != bp.planetSubLord &&
           pp[bp.planetSubSubLord] == true
         )
           SSLtemp.push(bp.planet);
@@ -151,8 +169,8 @@ export const getPlanetTable = (bhavas) => {
     "Ketu",
     "Venus",
   ];
-  let PP = calculatePP(bhavas);
-  let { plList: PL } = calculatePL(bhavas, PP);
+  let { calcPP: calcPP, planetArray: planetArray } = calculatePP(bhavas);
+  let { plList: PL } = calculatePL(bhavas, calcPP);
   let PLarray = twoDimArrToObj(PL);
 
   let PlanetTableArray = [];
@@ -172,9 +190,9 @@ export const getPlanetTable = (bhavas) => {
     connectBhTemp = [];
     // };
 
-    for (let i = 0; i < PP.length; i++) {
-      if (PP[i][planet]) primBhTemp.push(i + 1);
-      if (PP[i].planetArray.includes(planet)) locBhTemp.push(i + 1);
+    for (let i = 0; i < calcPP.length; i++) {
+      if (calcPP[i][planet]) primBhTemp.push(i + 1);
+      if (planetArray[i].includes(planet)) locBhTemp.push(i + 1);
       if (PLarray[i][planet]) connectBhTemp.push(i + 1);
     }
   });
@@ -193,13 +211,20 @@ export const getPlanetTable = (bhavas) => {
 export const getPPTable = (bhavas) => {
   let ppList = [];
   if (bhavas.length > 0) {
-    let PP = calculatePP(bhavas);
-    let { plList: PL, SSLlist: SSLlist } = calculatePL(bhavas, PP);
+    let {
+      displayPP: displayPP,
+      calcPP: calcPP,
+      planetArray: planetArray,
+    } = calculatePP(bhavas);
+
+    let { plList: PL, SSLlist: SSLlist } = calculatePL(bhavas, calcPP);
 
     for (let i = 1; i <= 12; i++) {
       let y = i - 1;
-      let PParray = Object.keys(PP[y]);
-      let locArray = PP[y].planetArray;
+      let PParray = Object.keys(displayPP[y]);
+      console.log(displayPP[y]);
+      console.log(PParray);
+      let locArray = planetArray[y];
 
       let tempArr = [];
       if (locArray.length > 0) tempArr = locArray.map((p) => p.substring(0, 2));
