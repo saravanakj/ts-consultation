@@ -220,8 +220,6 @@ export const getPPTable = (bhavas) => {
     PL.forEach((item, y) => {
       let i = y + 1;
       let PParray = Object.keys(displayPP[y]);
-      console.log(displayPP[y]);
-      console.log(PParray);
       let locArray = planetArray[y];
 
       let tempArr = [];
