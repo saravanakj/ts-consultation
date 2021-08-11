@@ -405,7 +405,7 @@ class Home extends Component {
       tzone,
     };
 
-    if (ayanamsha && lat && lon && tzone && date && time) {
+    if (lat && lon && tzone && date && time) {
       //removed seconds from required
       dispatch(search(payload));
       dispatch(majorDasha(payload));

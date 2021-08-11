@@ -67,176 +67,250 @@ export const prepareChartData = (houses, planets) => {
   return chart;
 };
 
-const calculatePP = (bhavas) => {
-  let displayPP = [];
-  let calcPP = [];
-  let dispObj = {};
-  let calcObj = {};
-  let planetArray = [];
-  let planetTemp = [];
-  bhavas.forEach((elem) => {
-    if (elem.houseId) {
-      planetArray.push(planetTemp);
-      displayPP.push(dispObj);
-      calcObj = { ...dispObj };
-      planetTemp.forEach((pt) => {
-        calcObj[pt] = true;
-      });
-      calcPP.push(calcObj);
-      dispObj = {};
-      calcObj = {};
-      planetTemp = [];
-
-      dispObj[elem.bukthiLord] = true;
-      dispObj[elem.dhasaLord] = true;
-      dispObj[elem.antharaLord] = true;
-    } else {
-      planetTemp.push(elem.planet);
+const populatePrimaryPlanets = function (bhavaTable, bhavas) {
+  let PParray = [];
+  let PPobjTemp = {};
+  bhavas.forEach((iterator) => {
+    if (iterator.houseId) {
+      PParray.push(PPobjTemp);
+      PPobjTemp = {};
+      PPobjTemp[iterator.bukthiLord] = true;
+      PPobjTemp[iterator.dhasaLord] = true;
+      PPobjTemp[iterator.antharaLord] = true;
     }
   });
-  planetArray.push(planetTemp);
-  planetArray.shift();
-  displayPP.push(dispObj);
-  displayPP.shift();
-  calcObj = { ...dispObj };
-  planetTemp.forEach((pt) => {
-    calcObj[pt] = true;
+  PParray.shift();
+  PParray.push(PPobjTemp);
+  PParray.forEach((iterator, index) => {
+    bhavaTable[index + 1] = { primaryPL: iterator };
   });
-
-  calcPP.push(calcObj);
-  calcPP.shift();
-
-  return { displayPP: displayPP, calcPP: calcPP, planetArray: planetArray };
 };
 
-const calculatePL = (bhavas, ppList) => {
-  let plList = [];
-  let bhavaPlanets = bhavas.filter((b) => b.planet != undefined);
-  let SSLlist = [];
-  ppList.forEach((pp) => {
-    let SSLtemp = [];
-    let pList = bhavaPlanets
-      .map((bp) => {
-        if (
-          pp[bp.planet] != true &&
-          pp[bp.planetNakLord] != true &&
-          pp[bp.planetSubLord] != true &&
-          bp.planetNakLord != bp.planetSubLord &&
-          pp[bp.planetSubSubLord] == true
-        )
-          SSLtemp.push(bp.planet);
+const populateLocatedPL = function (bhavaTable, bhavas) {
+  let locTemp = [];
+  let locatedPLarr = [];
+  bhavas.map((iterator) => {
+    if (iterator.houseId) {
+      locatedPLarr.push(locTemp);
+      locTemp = [];
+    } else {
+      locTemp.push(iterator.planet);
+    }
+  });
+  locatedPLarr.push(locTemp);
+  locatedPLarr.shift();
 
-        return pp[bp.planet] == true ||
-          pp[bp.planetNakLord] == true ||
-          pp[bp.planetSubLord] == true ||
-          (bp.planetNakLord == bp.planetSubLord &&
-            pp[bp.planetSubSubLord] == true)
-          ? bp.planet
+  locatedPLarr.map((iterator, index) => {
+    bhavaTable[index + 1]["locatedPL"] = iterator;
+  });
+};
+
+const calculationPrimaryPlanets = function (bhavaTable) {
+  let calcPPobj = {};
+  let calcPParr = [];
+  let index = 1;
+  for (let bhava in bhavaTable) {
+    //calcPPobj = {};
+    calcPPobj = { ...bhavaTable[bhava]["primaryPL"] };
+
+    bhavaTable[bhava]["locatedPL"].forEach((pt) => {
+      calcPPobj[pt] = true;
+    });
+
+    calcPParr.push(calcPPobj);
+  }
+  return calcPParr;
+};
+
+const populateConnectedPL = function (bhavaTable, calcPrimaryPlanets, bhavas) {
+  const bhavaPlanetsOnly = bhavas.filter((b) => b.planet != undefined);
+  let planetList = [];
+  calcPrimaryPlanets.forEach((PrimaryPlanet) => {
+    let planetListTemp = bhavaPlanetsOnly
+      .map((bhavaPlanet) => {
+        return PrimaryPlanet[bhavaPlanet.planet] == true ||
+          PrimaryPlanet[bhavaPlanet.planetNakLord] == true ||
+          PrimaryPlanet[bhavaPlanet.planetSubLord] == true ||
+          (bhavaPlanet.planetNakLord == bhavaPlanet.planetSubLord &&
+            PrimaryPlanet[bhavaPlanet.planetSubSubLord] == true)
+          ? bhavaPlanet.planet
           : "";
       })
       .filter((x) => x != "");
-    SSLlist.push(SSLtemp);
-    plList.push(pList);
+    planetList.push(planetListTemp);
   });
-
-  return { plList: plList, SSLlist: SSLlist };
+  planetList.forEach((element, index) => {
+    bhavaTable[index + 1]["connectedPL"] = element;
+    bhavaTable[index + 1]["connectedPLCount"] = element.length;
+  });
 };
 
-const twoDimArrToObj = (data) => {
-  let ObjArr = [];
-  let obj = {};
-  data.forEach((element) => {
-    ObjArr.push(obj);
-    obj = {};
-    element.forEach((element2) => {
-      obj[element2] = true;
+const populateSSLlist = function (bhavaTable, calcPrimaryPlanets, bhavas) {
+  const bhavaPlanetsOnly = bhavas.filter((b) => b.planet != undefined);
+  let SSLlist = [];
+  calcPrimaryPlanets.forEach((PrimaryPlanet) => {
+    let SSLtemp = [];
+    bhavaPlanetsOnly.forEach((bhavaPlanet) => {
+      if (
+        PrimaryPlanet[bhavaPlanet.planet] != true &&
+        PrimaryPlanet[bhavaPlanet.planetNakLord] != true &&
+        PrimaryPlanet[bhavaPlanet.planetSubLord] != true &&
+        bhavaPlanet.planetNakLord != bhavaPlanet.planetSubLord &&
+        PrimaryPlanet[bhavaPlanet.planetSubSubLord] == true
+      )
+        SSLtemp.push(bhavaPlanet.planet);
+    });
+    SSLlist.push(SSLtemp);
+  });
+  SSLlist.forEach((element, index) => {
+    bhavaTable[index + 1]["SSLlist"] = element;
+  });
+};
+
+const populateDefaultValue = function (bhavaTable, bhavas) {
+  const LHS = bhavas.filter((b) => b.houseId);
+
+  let BHL = [];
+  BHL[0] = LHS[0]["bukthiLord"];
+  for (let i = 2; i <= 12; i++) {
+    if (bhavaTable[i]["connectedPL"].includes(BHL[0])) BHL[i - 1] = BHL[0];
+    else BHL[i - 1] = LHS[i - 1]["bukthiLord"];
+  }
+  BHL.forEach((iterator, index) => {
+    bhavaTable[index + 1]["defaultValue"] = iterator;
+  });
+};
+
+const populatePrimaryBhava = function (planetTable, bhavas, planetList) {
+  let bhavaTable = {};
+  populatePrimaryPlanets(bhavaTable, bhavas);
+  populateLocatedPL(bhavaTable, bhavas);
+  const calcPrimPlan = calculationPrimaryPlanets(bhavaTable);
+  populateConnectedPL(bhavaTable, calcPrimPlan, bhavas);
+  let primBhTemp = [];
+  let primBhArray = [];
+  planetList.forEach((planet) => {
+    primBhArray.push(primBhTemp);
+    primBhTemp = [];
+
+    calcPrimPlan.forEach((item, i) => {
+      if (calcPrimPlan[i][planet]) primBhTemp.push(i + 1);
     });
   });
-  ObjArr.shift();
-  ObjArr.push(obj);
-  return ObjArr;
+  primBhArray.push(primBhTemp);
+  primBhArray.shift();
+  planetList.forEach((planet, index) => {
+    planetTable[planet] = { primaryBhava: primBhArray[index] };
+  });
+};
+
+const populateLocatedBhava = function (planetTable, bhavas, planetList) {
+  let locBhTemp = [];
+  let locatedBh = [];
+  let bhavaTable = {};
+  populatePrimaryPlanets(bhavaTable, bhavas);
+  populateLocatedPL(bhavaTable, bhavas);
+  const calcPrimPlan = calculationPrimaryPlanets(bhavaTable);
+
+  planetList.forEach((planet) => {
+    locatedBh.push(locBhTemp);
+    locBhTemp = [];
+    calcPrimPlan.forEach((item, i) => {
+      if (bhavaTable[i + 1]["locatedPL"].includes(planet))
+        locBhTemp.push(i + 1);
+    });
+  });
+  locatedBh.push(locBhTemp);
+  locatedBh.shift();
+  planetList.forEach((planet, index) => {
+    planetTable[planet]["locatedBhava"] = locatedBh[index];
+  });
+};
+
+const populateConnectedBhava = function (planetTable, bhavas, planetList) {
+  let bhavaTable = {};
+  populatePrimaryPlanets(bhavaTable, bhavas);
+  populateLocatedPL(bhavaTable, bhavas);
+  const calcPrimPlan = calculationPrimaryPlanets(bhavaTable);
+  populateConnectedPL(bhavaTable, calcPrimPlan, bhavas);
+  let connectedBhavaTemp = [];
+  let connectedBhavas = [];
+
+  planetList.forEach((planet) => {
+    connectedBhavas.push(connectedBhavaTemp);
+
+    connectedBhavaTemp = [];
+
+    calcPrimPlan.forEach((item, i) => {
+      if (bhavaTable[i + 1]["connectedPL"].includes(planet))
+        connectedBhavaTemp.push(i + 1);
+    });
+  });
+  connectedBhavas.push(connectedBhavaTemp);
+  connectedBhavas.shift();
+  planetList.forEach((planet, index) => {
+    planetTable[planet]["connectedBhava"] = connectedBhavas[index];
+  });
 };
 
 export const getPlanetTable = (bhavas) => {
-  let planetList = [
-    "Sun",
-    "Moon",
-    "Mars",
-    "Rahu",
-    "Jupiter",
-    "Saturn",
-    "Mercury",
-    "Ketu",
-    "Venus",
-  ];
-  let { calcPP: calcPP, planetArray: planetArray } = calculatePP(bhavas);
-  let { plList: PL } = calculatePL(bhavas, calcPP);
-  let PLarray = twoDimArrToObj(PL);
+  if (bhavas.length > 0) {
+    const planetList = [
+      "Sun",
+      "Moon",
+      "Mars",
+      "Rahu",
+      "Jupiter",
+      "Saturn",
+      "Mercury",
+      "Ketu",
+      "Venus",
+    ];
 
-  let PlanetTableArray = [];
-  let primBhTemp = [];
-  let locBhTemp = [];
-  let connectBhTemp = [];
+    let planetTable = {};
+    populatePrimaryBhava(planetTable, bhavas, planetList);
+    populateLocatedBhava(planetTable, bhavas, planetList);
+    populateConnectedBhava(planetTable, bhavas, planetList);
+    let PlanetTableArray = [];
+    for (const planet in planetTable) {
+      PlanetTableArray.push({
+        planetName: planet,
+        primBh: planetTable[planet]["primaryBhava"],
+        locBh: planetTable[planet]["locatedBhava"],
+        connectBh: planetTable[planet]["connectedBhava"],
+      });
+    }
 
-  planetList.forEach((planet) => {
-    PlanetTableArray.push({
-      primBh: primBhTemp,
-      locBh: locBhTemp,
-      connectBh: connectBhTemp,
-    });
-    primBhTemp = [];
-    locBhTemp = [];
-    connectBhTemp = [];
-
-    calcPP.forEach((item, i) => {
-      if (calcPP[i][planet]) primBhTemp.push(i + 1);
-      if (planetArray[i].includes(planet)) locBhTemp.push(i + 1);
-      if (PLarray[i][planet]) connectBhTemp.push(i + 1);
-    });
-  });
-  PlanetTableArray.push({
-    primBh: primBhTemp,
-    locBh: locBhTemp,
-    connectBh: connectBhTemp,
-  });
-  PlanetTableArray.shift();
-  PlanetTableArray.forEach((i, j = 0) => {
-    i.planetName = planetList[j++];
-  });
-  return PlanetTableArray;
+    return PlanetTableArray;
+  }
 };
 
-export const getPPTable = (bhavas) => {
-  let ppList = [];
+export const getPPTable = function (bhavas) {
   if (bhavas.length > 0) {
-    let {
-      displayPP: displayPP,
-      calcPP: calcPP,
-      planetArray: planetArray,
-    } = calculatePP(bhavas);
+    let bhavaTable = {};
+    populatePrimaryPlanets(bhavaTable, bhavas);
+    populateLocatedPL(bhavaTable, bhavas);
+    const calcPrimPlan = calculationPrimaryPlanets(bhavaTable);
+    populateConnectedPL(bhavaTable, calcPrimPlan, bhavas);
+    populateSSLlist(bhavaTable, calcPrimPlan, bhavas);
+    populateDefaultValue(bhavaTable, bhavas);
 
-    let { plList: PL, SSLlist: SSLlist } = calculatePL(bhavas, calcPP);
-
-    PL.forEach((item, y) => {
-      let i = y + 1;
-      let PParray = Object.keys(displayPP[y]);
-      let locArray = planetArray[y];
-
-      let tempArr = [];
-      if (locArray.length > 0) tempArr = locArray.map((p) => p.substring(0, 2));
-
+    const ppList = [];
+    for (let bhava in bhavaTable) {
       ppList.push({
-        houseId: i,
-        count: item.length,
-        pp: PParray.map((p) => p.substring(0, 2)),
-        loc: tempArr,
-        pl: item.map((p) => p.substring(0, 2)),
-        SSLlist: SSLlist[y].map((p) => p.substring(0, 2)),
+        houseId: bhava,
+        count: bhavaTable[bhava]["connectedPLCount"],
+        pp: Object.keys(bhavaTable[bhava]["primaryPL"]).map((p) =>
+          p.substring(0, 2)
+        ),
+        loc: bhavaTable[bhava]["locatedPL"].map((p) => p.substring(0, 2)),
+        pl: bhavaTable[bhava]["connectedPL"].map((p) => p.substring(0, 2)),
+        SSLlist: bhavaTable[bhava]["SSLlist"].map((p) => p.substring(0, 2)),
       });
-    });
-  }
+    }
 
-  return ppList;
+    return ppList;
+  }
 };
 
 export const locateIndex = (chart, planetDegree) => {
