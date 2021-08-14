@@ -16,7 +16,7 @@ import {
   postCustomerData,
   updateCustomerData,
 } from "../../api_helper/slice/homeSlice";
-import { prepareChartData, getPPTable, getPlanetTable } from "./helper";
+import { prepareChartData, getBhavaTable, getPlanetTable } from "./helper";
 import "../../App.css";
 import { LocationSearchInput } from "../../components/LocationSearchInput/LocationSearchInput";
 import { db } from "../../firebase/firebaseConfig";
@@ -60,32 +60,41 @@ const DisplayDhasa = ({ data, title, handleClick, keyName }) => {
 };
 
 const setOpacityUnderline = (plList, SSllist, planetList) => {
-  const styleObj = planetList.map((o) => {
-    return {
-      name: o,
-      transparency: !plList.includes(o),
-      underline: SSllist.includes(o),
-    };
-  });
+  const styleObj = planetList.map((o) => ({
+    name: o,
+    transparency: !plList.includes(o),
+    underline: SSllist.includes(o),
+  }));
   return styleObj;
 };
 
 const opaqueStyle = { opacity: "0.2" };
 const normalStyle = { opacity: "1" };
-const opaqueUnderStyle = { opacity: "0.2", textDecoration: "underline" };
+const opaqueUnderStyle = {
+  opacity: "1",
+  textDecoration: "underline",
+  textDecorationColor: "blue",
+};
 const planetList = ["Su", "Mo", "Ma", "Ra", "Ju", "Sa", "Me", "Ke", "Ve"];
 
+const stylePrimaryPlanet = function (pp, subLord) {
+  const primaryPlanetStyle = pp.map((p) => {
+    return { name: p, subLord: p == subLord };
+  });
+  return primaryPlanetStyle;
+};
 const DisplayBhavaList = ({ BhavaList }) => {
   return (
     <div className="pl_card">
       <div className="pt_smallcard_contanier">
         <table className="table">
           <tr className={`pt_smallcard`}>
-            <th className="dasa_cell w10">Bh#</th>
-            <th className="dasa_cell w10">No.</th>
+            <th className="dasa_cell w5">Bh#</th>
+            <th className="dasa_cell w5">No.</th>
             <th className="dasa_cell w20">Primary PL</th>
+            <th className="dasa_cell w5">Def</th>
             <th className="dasa_cell w20">Located PL</th>
-            <th className="dasa_cell w40">Connected PL</th>
+            <th className="dasa_cell w45">Connected PL</th>
           </tr>
 
           {BhavaList.map((i) => {
@@ -94,16 +103,26 @@ const DisplayBhavaList = ({ BhavaList }) => {
               i.SSLlist,
               planetList
             );
+            const primaryPlanetStyle = stylePrimaryPlanet(i.pp, i.subLord);
 
             return (
               <tr className={`pt_smallcard`}>
-                <td className={`pp_cell w10 ${i.count > 6 ? "highlight" : ""}`}>
+                <td className={`pp_cell w5 ${i.count > 6 ? "highlight" : ""}`}>
                   {i.houseId}
                 </td>
-                <td className="pp_cell w10">{i.count}</td>
-                <td className="pp_cell w20">{i.pp.join(", ")}</td>
+                <td className="pp_cell w5">{i.count}</td>
+                {/* <td className="pp_cell w20">{i.pp.join(", ")}</td> */}
+                <td className="pp_cell w20">
+                  {primaryPlanetStyle.map((pp, index) => (
+                    <span className={pp.subLord ? "blue" : ""}>
+                      {pp.name}
+                      {index != primaryPlanetStyle.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
+                </td>
+                <td className="pp_cell w5">{i.def}</td>
                 <td className="pp_cell w20">{i.loc.join(", ")}</td>
-                <td className="pp_cell w40">
+                <td className="pp_cell w45">
                   {planetStyleObjects.map((pl) => (
                     <span
                       style={
@@ -128,11 +147,11 @@ const DisplayBhavaList = ({ BhavaList }) => {
   );
 };
 
-const setOpacity = (plList = [], planetList) => {
-  const styleObj = planetList.map((o) => {
-    return { name: o, transparency: !plList.includes(o) };
+const styleSublordBh = function (primaryBh, sublordBh) {
+  const sublordBhStyleObject = primaryBh.map((ppBh) => {
+    return { name: ppBh, sublordBh: sublordBh.includes(ppBh) };
   });
-  return styleObj;
+  return sublordBhStyleObject;
 };
 const planetNo = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const DisplayPlanetList = ({ PlanetList }) => {
@@ -147,20 +166,20 @@ const DisplayPlanetList = ({ PlanetList }) => {
             <th className="dasa_cell w50">Connected Bh</th>
           </tr>
           {PlanetList.map((i) => {
-            const planetNoObjects = setOpacity(i.connectBh, planetNo);
+            const sublordBhStyle = styleSublordBh(i.primBh, i.sublordBh);
             return (
               <tr className={`pt_smallcard`}>
                 <td className="pp_cell w20">{i.planetName}</td>
-                <td className="pp_cell w20">{i.primBh.join(", ")}</td>
-                <td className="pp_cell w10">{i.locBh.join(", ")}</td>
-                <td className="pp_cell w50">
-                  {planetNoObjects.map((plno) => (
-                    <span style={plno.transparency ? opaqueStyle : normalStyle}>
-                      {plno.name}
-                      {plno.name != 12 ? ", " : ""}
+                <td className="pp_cell w40">
+                  {sublordBhStyle.map((pBh, index) => (
+                    <span className={pBh.sublordBh ? "blue" : ""}>
+                      {pBh.name}
+                      {index != sublordBhStyle.length - 1 ? ", " : ""}
                     </span>
                   ))}
                 </td>
+                <td className="pp_cell w10">{i.locBh.join(", ")}</td>
+                <td className="pp_cell w30">{i.connectBh.join(", ")}</td>
               </tr>
             );
           })}
@@ -792,7 +811,7 @@ function mapStateToProps(state) {
     home;
   const { houses, planets } = search || "";
   const chart = houses && planets ? prepareChartData(houses, planets) : [];
-  const ppList = getPPTable(chart);
+  const ppList = getBhavaTable(chart);
   const PlanetList = getPlanetTable(chart);
 
   return {

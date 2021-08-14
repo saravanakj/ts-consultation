@@ -110,7 +110,6 @@ const calculationPrimaryPlanets = function (bhavaTable) {
   let calcPParr = [];
   let index = 1;
   for (let bhava in bhavaTable) {
-    //calcPPobj = {};
     calcPPobj = { ...bhavaTable[bhava]["primaryPL"] };
 
     bhavaTable[bhava]["locatedPL"].forEach((pt) => {
@@ -178,6 +177,16 @@ const populateDefaultValue = function (bhavaTable, bhavas) {
   }
   BHL.forEach((iterator, index) => {
     bhavaTable[index + 1]["defaultValue"] = iterator;
+  });
+};
+
+const populateSublord = function (bhavaTable, bhavas) {
+  const LHS = bhavas.filter((p) => p.houseId);
+
+  LHS.forEach((bhava) => {
+    if (bhava.bukthiLord != bhava.dhasaLord)
+      bhavaTable[bhava.houseId]["subLord"] = bhava.bukthiLord;
+    else bhavaTable[bhava.houseId]["subLord"] = bhava.antharaLord;
   });
 };
 
@@ -249,7 +258,25 @@ const populateConnectedBhava = function (planetTable, bhavas, planetList) {
   connectedBhavas.push(connectedBhavaTemp);
   connectedBhavas.shift();
   planetList.forEach((planet, index) => {
+    connectedBhavas[index] = connectedBhavas[index].filter((cb) => {
+      return (
+        !planetTable[planet]["locatedBhava"].includes(cb) &&
+        !planetTable[planet]["primaryBhava"].includes(cb)
+      );
+    });
     planetTable[planet]["connectedBhava"] = connectedBhavas[index];
+  });
+};
+
+const populateSublordBh = function (planetTable, bhavas) {
+  const LHS = bhavas.filter((bh) => bh.houseId);
+  for (let planet in planetTable) {
+    planetTable[planet]["sublordBh"] = [];
+  }
+  LHS.forEach((bhava) => {
+    if (bhava.bukthiLord != bhava.dhasaLord)
+      planetTable[bhava.bukthiLord]["sublordBh"].push(bhava.houseId);
+    else planetTable[bhava.antharaLord]["sublordBh"].push(bhava.houseId);
   });
 };
 
@@ -271,6 +298,7 @@ export const getPlanetTable = (bhavas) => {
     populatePrimaryBhava(planetTable, bhavas, planetList);
     populateLocatedBhava(planetTable, bhavas, planetList);
     populateConnectedBhava(planetTable, bhavas, planetList);
+    populateSublordBh(planetTable, bhavas);
     let PlanetTableArray = [];
     for (const planet in planetTable) {
       PlanetTableArray.push({
@@ -278,6 +306,7 @@ export const getPlanetTable = (bhavas) => {
         primBh: planetTable[planet]["primaryBhava"],
         locBh: planetTable[planet]["locatedBhava"],
         connectBh: planetTable[planet]["connectedBhava"],
+        sublordBh: planetTable[planet]["sublordBh"],
       });
     }
 
@@ -285,7 +314,7 @@ export const getPlanetTable = (bhavas) => {
   }
 };
 
-export const getPPTable = function (bhavas) {
+export const getBhavaTable = function (bhavas) {
   if (bhavas.length > 0) {
     let bhavaTable = {};
     populatePrimaryPlanets(bhavaTable, bhavas);
@@ -294,7 +323,7 @@ export const getPPTable = function (bhavas) {
     populateConnectedPL(bhavaTable, calcPrimPlan, bhavas);
     populateSSLlist(bhavaTable, calcPrimPlan, bhavas);
     populateDefaultValue(bhavaTable, bhavas);
-
+    populateSublord(bhavaTable, bhavas);
     const ppList = [];
     for (let bhava in bhavaTable) {
       ppList.push({
@@ -303,6 +332,8 @@ export const getPPTable = function (bhavas) {
         pp: Object.keys(bhavaTable[bhava]["primaryPL"]).map((p) =>
           p.substring(0, 2)
         ),
+        subLord: bhavaTable[bhava]["subLord"].substring(0, 2),
+        def: bhavaTable[bhava]["defaultValue"].substring(0, 2),
         loc: bhavaTable[bhava]["locatedPL"].map((p) => p.substring(0, 2)),
         pl: bhavaTable[bhava]["connectedPL"].map((p) => p.substring(0, 2)),
         SSLlist: bhavaTable[bhava]["SSLlist"].map((p) => p.substring(0, 2)),
